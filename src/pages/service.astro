@@ -1,6 +1,45 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PictureSlot from "../components/PictureSlot.astro";
+
+const services = [
+  {
+    title: "💕問事服務",
+    price: "$2600",
+    meta: "1~1.5hr",
+    description: "透過一對一對話整理當前困惑，看見事件背後的狀態與下一步方向。",
+  },
+  {
+    title: "💕牌卡占卜",
+    price: "$200",
+    meta: "10分鐘",
+    description: "以牌卡作為提醒與映照，協助聚焦問題、釐清選擇與目前能量流向。",
+  },
+  {
+    title: "💕手工藥香",
+    price: "$1690",
+    meta: "70g",
+    description: "手工製作的藥香，適合用於日常靜心、空間安定與個人儀式感整理。",
+  },
+  {
+    title: "💕調頻蠟燭",
+    price: "$1200",
+    meta: "200~220g",
+    description: "結合香氣與燭光陪伴，為冥想、放鬆或空間轉換建立柔和穩定的氛圍。",
+  },
+  {
+    title: "💕家族排列",
+    price: "個案 / 團體",
+    meta: "依場次確認",
+    description: "透過排列方式看見關係與系統中的牽動，讓卡住的議題有機會被重新理解。",
+  },
+  {
+    title: "💕身體經絡放鬆引導",
+    price: "$2000",
+    meta: "1hr",
+    description: "以身體覺察與經絡放鬆引導，陪你回到身體，釋放累積的緊繃與壓力。",
+  },
+];
 ---
 
 <BaseLayout
@@ -13,7 +52,7 @@ import PictureSlot from "../components/PictureSlot.astro";
         <p class="eyebrow">SERVICE</p>
         <h1>服務介紹</h1>
         <p class="lead">
-          服務以一對一陪伴與整理為主，協助來訪者在對話中釐清狀態、理解困擾並找到可實行的下一步。
+          靜初苑提供問事、牌卡、香氣、蠟燭、家族排列與身體經絡放鬆引導，陪你從心、身體與空間慢慢回到穩定。
         </p>
         <div class="button-row">
           <a class="button" href="/contact/">詢問預約</a>
@@ -33,19 +72,21 @@ import PictureSlot from "../components/PictureSlot.astro";
     <div class="container">
       <p class="eyebrow">DETAILS</p>
       <h2>服務內容</h2>
-      <div class="grid">
-        <article class="card">
-          <h3>一對一對話</h3>
-          <p>透過專注且溫和的對話，協助你把複雜感受、困擾與需求慢慢說清楚。</p>
-        </article>
-        <article class="card">
-          <h3>狀態整理</h3>
-          <p>針對近期壓力、人際關係、生活選擇或情緒狀態，整理出目前最需要被看見的重點。</p>
-        </article>
-        <article class="card">
-          <h3>下一步方向</h3>
-          <p>服務結束前，協助歸納可行的小步驟，讓你知道接下來可以先從哪裡開始。</p>
-        </article>
+      <div class="grid service-grid">
+        {
+          services.map((service) => (
+            <article class="card service-card">
+              <div>
+                <h3>{service.title}</h3>
+                <p>{service.description}</p>
+              </div>
+              <div class="service-info">
+                <span class="service-price">{service.price}</span>
+                <span class="service-meta">{service.meta}</span>
+              </div>
+            </article>
+          ))
+        }
       </div>
     </div>
   </section>
@@ -56,13 +97,13 @@ import PictureSlot from "../components/PictureSlot.astro";
         <p class="eyebrow">PRICE & BOOKING</p>
         <h2>費用與預約方式</h2>
         <p>
-          每一次服務都會依照當下需求與適合的進行方式安排。若你還不確定自己需要哪一種協助，也可以先透過 LINE 或 Instagram 簡單詢問。
+          若你還不確定自己適合哪一項服務，可以先透過 LINE 或 Instagram 簡單說明目前狀態，再一起確認合適的安排。
         </p>
         <ul class="list">
-          <li>服務時間：依預約內容與實際需求確認。</li>
-          <li>進行方式：可先私訊確認適合的安排。</li>
+          <li>服務時間：依各服務標示時間或場次安排確認。</li>
+          <li>進行方式：一對一、個案或團體場次可先私訊確認。</li>
           <li>預約流程：加入 LINE 或 Instagram 詢問，再一起確認時間。</li>
-          <li>費用與付款方式：私訊後依服務內容說明。</li>
+          <li>付款方式與注意事項：預約時一併說明。</li>
         </ul>
       </div>
       <div class="card highlight">
@@ -80,5 +121,57 @@ import PictureSlot from "../components/PictureSlot.astro";
   .highlight {
     background: #fff;
     align-self: stretch;
+  }
+
+  .service-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  .service-card {
+    display: grid;
+    min-height: 238px;
+    align-content: space-between;
+    gap: 28px;
+  }
+
+  .service-card h3 {
+    color: var(--color-gold-dark);
+  }
+
+  .service-card p {
+    margin-bottom: 0;
+  }
+
+  .service-info {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 14px;
+    padding-top: 18px;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .service-price {
+    color: var(--color-text);
+    font-size: 24px;
+    line-height: 1.2;
+  }
+
+  .service-meta {
+    color: var(--color-muted);
+    font-size: 14px;
+    text-align: right;
+  }
+
+  @media (max-width: 640px) {
+    .service-info {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .service-meta {
+      text-align: left;
+    }
   }
 </style>
