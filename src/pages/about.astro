@@ -5,7 +5,7 @@ import PictureSlot from "../components/PictureSlot.astro";
 
 <BaseLayout title="關於我">
   <section class="page">
-    <div class="container split">
+    <div class="container split origin-split">
       <div>
         <p class="eyebrow">ABOUT</p>
         <h1>靜初苑的緣起</h1>
@@ -36,3 +36,20 @@ import PictureSlot from "../components/PictureSlot.astro";
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .origin-split {
+    align-items: stretch;
+  }
+
+  .origin-split :global(.image-slot) {
+    height: 100%;
+    min-height: 0;
+  }
+
+  @media (max-width: 640px) {
+    .origin-split :global(.image-slot) {
+      min-height: 260px;
+    }
+  }
+</style>

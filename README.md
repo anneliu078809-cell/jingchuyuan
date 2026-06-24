@@ -31,6 +31,9 @@ Environment variable：
 
 ```text
 NODE_VERSION=22
+RESEND_API_KEY=你的 Resend API Key
+CONTACT_TO_EMAIL=jingchuyuan1413@gmail.com
+CONTACT_FROM_EMAIL=已在 Resend 驗證的寄件信箱（選填）
 ```
 
-目前網站提供 LINE / Instagram 與聯絡表單。表單送出內容會寄到指定 Email 信箱。
+目前網站提供 LINE / Instagram 與聯絡表單。表單會送到 Cloudflare Pages Function，再透過 Resend 寄到 `CONTACT_TO_EMAIL` 指定的信箱。

@@ -4,6 +4,8 @@ import PictureSlot from "../components/PictureSlot.astro";
 
 const lineAppUrl = "line://ti/p/%40eoo4230y";
 const lineWebUrl = "https://line.me/R/ti/p/%40eoo4230y";
+const contactEmail = "jingchuyuan1413@gmail.com";
+const contactPhone = "0981328622";
 ---
 
 <BaseLayout
@@ -40,6 +42,16 @@ const lineWebUrl = "https://line.me/R/ti/p/%40eoo4230y";
             Instagram
           </a>
         </div>
+        <dl class="contact-details" aria-label="靜初苑聯絡資訊">
+          <div>
+            <dt>Email</dt>
+            <dd><a href={`mailto:${contactEmail}`}>{contactEmail}</a></dd>
+          </div>
+          <div>
+            <dt>電話</dt>
+            <dd><a href={`tel:${contactPhone}`}>{contactPhone}</a></dd>
+          </div>
+        </dl>
       </div>
       <PictureSlot
         src="/images/contact/contact.webp"
@@ -58,11 +70,9 @@ const lineWebUrl = "https://line.me/R/ti/p/%40eoo4230y";
           如果你想先留下資料，也可以填寫表單。收到後會再透過你留下的聯絡方式回覆。
         </p>
       </div>
-      <form class="card contact-form" action="https://formsubmit.co/anneliu078809@gmail.com" method="post">
-        <input type="hidden" name="_subject" value="靜初苑網站聯絡表單" />
-        <input type="hidden" name="_template" value="table" />
-        <input type="hidden" name="_captcha" value="false" />
+      <form class="card contact-form" action="/api/contact" method="post">
         <input type="text" name="_honey" autocomplete="off" tabindex="-1" aria-hidden="true" class="form-honey" />
+        <p class="form-status" data-contact-status hidden></p>
         <label>
           姓名或暱稱
           <input type="text" name="姓名或暱稱" placeholder="請輸入姓名或暱稱" required />
@@ -106,6 +116,21 @@ const lineWebUrl = "https://line.me/R/ti/p/%40eoo4230y";
 </BaseLayout>
 
 <script>
+  const statusMessage = document.querySelector<HTMLElement>("[data-contact-status]");
+  const urlParams = new URLSearchParams(window.location.search);
+
+  if (statusMessage && urlParams.get("sent") === "1") {
+    statusMessage.hidden = false;
+    statusMessage.textContent = "表單已送出，收到後會再透過你留下的方式回覆。";
+    statusMessage.dataset.type = "success";
+  }
+
+  if (statusMessage && urlParams.get("error") === "1") {
+    statusMessage.hidden = false;
+    statusMessage.textContent = "表單暫時無法送出，請稍後再試，或直接透過 LINE 聯絡。";
+    statusMessage.dataset.type = "error";
+  }
+
   const isMobileDevice = () =>
     window.matchMedia("(pointer: coarse)").matches ||
     /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
@@ -135,6 +160,48 @@ const lineWebUrl = "https://line.me/R/ti/p/%40eoo4230y";
 </script>
 
 <style>
+  .contact-details {
+    display: grid;
+    gap: 10px;
+    margin: 28px 0 0;
+    padding: 18px 20px;
+    border-left: 2px solid var(--color-gold);
+    background: rgba(255, 250, 244, 0.72);
+  }
+
+  .contact-details div {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 14px;
+    align-items: baseline;
+  }
+
+  .contact-details dt {
+    color: var(--color-gold-dark);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .contact-details dd {
+    margin: 0;
+    color: var(--color-text);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+
+  .contact-details a {
+    color: inherit;
+    text-decoration-color: rgba(128, 85, 44, 0.35);
+    text-underline-offset: 4px;
+  }
+
+  .contact-details a:hover {
+    color: var(--color-gold-dark);
+  }
+
   .contact-form {
     align-self: start;
   }
@@ -150,7 +217,26 @@ const lineWebUrl = "https://line.me/R/ti/p/%40eoo4230y";
     left: -9999px;
   }
 
+  .form-status {
+    margin: 0;
+    padding: 12px 14px;
+    border: 1px solid rgba(189, 146, 82, 0.32);
+    background: rgba(247, 241, 231, 0.72);
+    color: var(--color-text);
+    font-size: 15px;
+  }
+
+  .form-status[data-type="error"] {
+    border-color: rgba(150, 67, 54, 0.35);
+    color: #8f352b;
+  }
+
   @media (max-width: 640px) {
+    .contact-details div {
+      grid-template-columns: 1fr;
+      gap: 2px;
+    }
+
     .contact-form .button {
       width: 100%;
     }
