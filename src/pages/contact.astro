@@ -1,0 +1,122 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PictureSlot from "../components/PictureSlot.astro";
+
+const lineAppUrl = "line://ti/p/~eoo4230y";
+const lineWebUrl = "https://line.me/R/ti/p/~eoo4230y";
+---
+
+<BaseLayout
+  title="聯絡"
+  description="聯絡靜初苑，可透過 LINE、Instagram 或預留表單欄位詢問服務。"
+>
+  <section class="page">
+    <div class="container split">
+      <div>
+        <p class="eyebrow">CONTACT</p>
+        <h1>聯絡與預約</h1>
+        <p class="lead">
+          目前建議先以 LINE 官方帳號作為主要聯絡管道，也可以透過 Instagram 詢問服務與預約方式。
+        </p>
+        <div class="button-row">
+          <a
+            class="button"
+            href={lineWebUrl}
+            aria-label="加入 LINE 官方帳號"
+            target="_blank"
+            rel="noreferrer"
+            data-line-app-url={lineAppUrl}
+            data-line-web-url={lineWebUrl}
+          >
+            加入 LINE
+          </a>
+          <a
+            class="button secondary"
+            href="https://www.instagram.com/jing_chu_yuan?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+            aria-label="前往 Instagram"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Instagram
+          </a>
+        </div>
+      </div>
+      <PictureSlot
+        src="/images/contact/contact.webp"
+        alt="靜初苑聯絡與預約意象"
+        label="聯絡頁圖片預留"
+      />
+    </div>
+  </section>
+
+  <!--
+  表單功能暫時隱藏。
+  後續若要啟用，可接 Cloudflare Function / Worker，並將資料存到 Google Sheet、D1 或通知管理者。
+  <section class="band">
+    <div class="container split">
+      <div>
+        <p class="eyebrow">FORM PREVIEW</p>
+        <h2>聯絡表單預留</h2>
+        <p>
+          這份表單目前是前端版型，尚未接後端。下一階段可以把內容送到 LINE 官方帳號，並同步備份到 Google Sheet 或 Cloudflare D1。
+        </p>
+      </div>
+      <form class="card" action="#" method="post">
+        <label>
+          姓名或暱稱
+          <input type="text" name="name" placeholder="請輸入姓名或暱稱" />
+        </label>
+        <label>
+          偏好的聯絡方式
+          <select name="contact_type">
+            <option value="">請選擇</option>
+            <option>LINE ID</option>
+            <option>電話</option>
+            <option>Email</option>
+            <option>Instagram</option>
+          </select>
+        </label>
+        <label>
+          聯絡資料
+          <input type="text" name="contact_value" placeholder="請填寫帳號、電話或 Email" />
+        </label>
+        <label>
+          想聊的方向
+          <textarea name="message" placeholder="可簡單說明目前需求，選填即可"></textarea>
+        </label>
+        <button class="button" type="button" data-form-dialog-open>送出表單</button>
+      </form>
+    </div>
+  </section>
+  -->
+
+</BaseLayout>
+
+<script>
+  const isMobileDevice = () =>
+    window.matchMedia("(pointer: coarse)").matches ||
+    /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+
+  document.querySelectorAll<HTMLAnchorElement>("[data-line-app-url][data-line-web-url]").forEach((link) => {
+    link.addEventListener("click", (event) => {
+      const appUrl = link.dataset.lineAppUrl;
+      const webUrl = link.dataset.lineWebUrl;
+
+      if (!appUrl || !webUrl) {
+        return;
+      }
+
+      if (!isMobileDevice()) {
+        return;
+      }
+
+      event.preventDefault();
+      window.location.href = appUrl;
+      window.setTimeout(() => {
+        if (!document.hidden) {
+          window.location.href = webUrl;
+        }
+      }, 900);
+    });
+  });
+</script>

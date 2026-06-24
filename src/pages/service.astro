@@ -1,0 +1,84 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PictureSlot from "../components/PictureSlot.astro";
+---
+
+<BaseLayout
+  title="服務介紹"
+  description="靜初苑服務介紹，包含服務內容、適合對象、費用與預約方式。"
+>
+  <section class="page">
+    <div class="container split">
+      <div>
+        <p class="eyebrow">SERVICE</p>
+        <h1>服務介紹</h1>
+        <p class="lead">
+          服務以一對一陪伴與整理為主，協助來訪者在對話中釐清狀態、理解困擾並找到可實行的下一步。
+        </p>
+        <div class="button-row">
+          <a class="button" href="/contact/">詢問預約</a>
+          <a class="button secondary" href="/faq/">閱讀 FAQ</a>
+        </div>
+      </div>
+      <PictureSlot
+        src="/images/service/service-scene.webp"
+        alt="靜初苑服務情境"
+        label="服務情境圖片預留"
+        variant="tall"
+      />
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="container">
+      <p class="eyebrow">DETAILS</p>
+      <h2>服務內容</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>一對一對話</h3>
+          <p>透過專注且溫和的對話，協助你把複雜感受、困擾與需求慢慢說清楚。</p>
+        </article>
+        <article class="card">
+          <h3>狀態整理</h3>
+          <p>針對近期壓力、人際關係、生活選擇或情緒狀態，整理出目前最需要被看見的重點。</p>
+        </article>
+        <article class="card">
+          <h3>後續方向</h3>
+          <p>服務結束前，協助歸納可行的小步驟，讓你知道接下來可以先從哪裡開始。</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container split">
+      <div>
+        <p class="eyebrow">PRICE & BOOKING</p>
+        <h2>費用與預約方式</h2>
+        <p>
+          費用、服務長度與預約注意事項可依客戶實際內容替換。第一版建議寫得清楚但保留彈性，避免訪客看完仍不知道下一步。
+        </p>
+        <ul class="list">
+          <li>服務時間：可填 50 分鐘、90 分鐘或依實際服務設定。</li>
+          <li>進行方式：可填線上、實體，或兩者皆可。</li>
+          <li>預約流程：先加入 LINE 詢問，再人工確認時間。</li>
+          <li>付款方式：可填轉帳、現金或其他方式。</li>
+        </ul>
+      </div>
+      <div class="card highlight">
+        <p class="eyebrow">NEXT STEP</p>
+        <h3>目前建議第一版先人工預約</h3>
+        <p>
+          等服務流程穩定後，再加入線上預約與自動通知，避免一開始就把流程做得過重。
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .highlight {
+    background: #fff;
+    align-self: stretch;
+  }
+</style>

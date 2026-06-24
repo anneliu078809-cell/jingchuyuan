@@ -1,0 +1,206 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PictureSlot from "../components/PictureSlot.astro";
+---
+
+<BaseLayout
+  title="首頁"
+  description="靜初苑提供一對一陪伴與諮詢服務，協助整理狀態、釐清困擾並建立下一步。"
+>
+  <section class="hero">
+    <PictureSlot
+      src="/images/home/hero.webp"
+      alt="靜初苑首頁主視覺"
+      label="首頁主視覺圖片預留"
+      variant="hero"
+    />
+    <div class="hero-panel">
+      <p class="eyebrow">JING CHU YUAN</p>
+      <h1>人生的答案就在你願意看見自己的那一刻顯現。</h1>
+      <p class="lead">
+        靜初苑在這裡，陪伴你找回自己（破除執著、看清實相），引導你看見自身的價值（找回你的靈魂願圖）。
+      </p>
+      <div class="button-row">
+        <a class="button" href="/contact/">聯絡預約</a>
+        <a class="button secondary" href="/service/">了解服務</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container split">
+      <div>
+        <p class="eyebrow">ABOUT SERVICE</p>
+        <h2>這是一個能慢下來，好好整理自己的地方。</h2>
+        <p>
+          靜初苑作為對外服務的第一個接觸點，先讓來訪者快速理解服務內容、適合對象、預約方式與聯絡管道。
+          後續可加入聯絡表單、自動通知與線上預約，降低雙方來回確認的時間。
+        </p>
+        <ul class="list">
+          <li>服務介紹：說明服務內容、進行方式與適合情境。</li>
+          <li>聯絡預約：先以 LINE 或 IG 人工確認，保留表單擴充。</li>
+          <li>FAQ：集中回答常見疑問，減少重複溝通。</li>
+        </ul>
+      </div>
+      <PictureSlot
+        src="/images/home/service-intro.webp"
+        alt="靜初苑服務意象"
+        label="關於服務圖片預留"
+        variant="tall"
+      />
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="container center">
+      <p class="eyebrow">WHO IT IS FOR</p>
+      <h2>適合哪些人</h2>
+      <p class="lead">如果你正在經歷以下狀態，可以先從一次詢問開始。</p>
+      <div class="grid">
+        <article class="card">
+          <h3>想整理近期狀態</h3>
+          <p>覺得心裡有很多事，需要有人陪你慢慢說清楚、看見真正卡住的地方。</p>
+        </article>
+        <article class="card">
+          <h3>正在面對選擇</h3>
+          <p>卡在關係、工作、生活方向，想更理解自己的需求、顧慮與可能選項。</p>
+        </article>
+        <article class="card">
+          <h3>需要穩定陪伴</h3>
+          <p>希望有一段固定時間能被好好聽見，也能用不急迫的節奏看見改變。</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <p class="eyebrow">FLOW</p>
+      <h2>預約流程</h2>
+      <div class="grid steps">
+        <article class="card">
+          <span class="step-no">01</span>
+          <h3>加入 LINE 或填寫表單</h3>
+          <p>
+            留下姓名、聯絡方式與簡單需求。第一版可先以 LINE
+            為主，表單作為下一階段功能。
+          </p>
+        </article>
+        <article class="card">
+          <span class="step-no">02</span>
+          <h3>人工確認服務方式</h3>
+          <p>確認適合的服務、時間、費用與注意事項，必要時也能先簡短詢問。</p>
+        </article>
+        <article class="card">
+          <span class="step-no">03</span>
+          <h3>開始服務</h3>
+          <p>
+            依約定方式進行。後續可視需求安排下一次，未來可再加入線上預約系統。
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="container split">
+      <PictureSlot
+        src="/images/home/feedback.webp"
+        alt="靜初苑服務心得意象"
+        label="服務心得圖片或插圖預留"
+      />
+      <div>
+        <p class="eyebrow">FEEDBACK</p>
+        <h2>服務心得回饋</h2>
+        <div class="quote-list">
+          <blockquote>
+            「談完之後比較知道自己真正擔心的是什麼，也比較能做決定。」
+          </blockquote>
+          <blockquote>
+            「過程很溫和，不會被催促，可以慢慢把話說完。」
+          </blockquote>
+          <blockquote>
+            「原本只覺得很混亂，後來能整理出幾個可以先做的小步驟。」
+          </blockquote>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    position: relative;
+    padding: 0;
+    background: #fff;
+  }
+
+  .hero-visual {
+    min-height: clamp(360px, 46vw, 540px);
+    border-left: 0;
+    border-right: 0;
+  }
+
+  .hero-panel {
+    width: min(calc(100% - 48px), 880px);
+    margin: -150px auto 0;
+    padding: clamp(28px, 5vw, 56px);
+    position: relative;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.88);
+    text-align: center;
+  }
+
+  .hero-panel h1 {
+    max-width: 820px;
+    font-size: clamp(34px, 5vw, 58px);
+  }
+
+  .hero-panel h1,
+  .hero-panel .lead {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero + section {
+    padding-top: 96px;
+  }
+
+  .steps .card {
+    position: relative;
+  }
+
+  .step-no {
+    display: block;
+    margin-bottom: 24px;
+    color: var(--color-gold);
+    font-size: 32px;
+    letter-spacing: 0.16em;
+  }
+
+  .quote-list {
+    display: grid;
+    gap: 16px;
+  }
+
+  blockquote {
+    margin: 0;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--color-line);
+    color: var(--color-muted);
+    font-size: 18px;
+  }
+
+  @media (max-width: 640px) {
+    .hero-panel {
+      width: min(calc(100% - 32px), 560px);
+      margin-top: -110px;
+      padding: 28px 22px;
+      text-align: left;
+    }
+
+    .hero-panel h1 {
+      font-size: clamp(30px, 8vw, 42px);
+    }
+  }
+</style>

@@ -1,0 +1,18 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  label: string;
+  variant?: "default" | "tall" | "hero";
+}
+
+const { src, alt, label, variant = "default" } = Astro.props;
+---
+
+<div class:list={["image-slot", variant !== "default" && variant]}>
+  <img src={src} alt={alt} loading={variant === "hero" ? "eager" : "lazy"} onload="this.parentElement.classList.add('is-loaded')" onerror="this.remove()" />
+  <span>
+    {label}
+    <small>{src}</small>
+  </span>
+</div>

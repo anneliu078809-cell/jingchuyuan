@@ -1,0 +1,67 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const faqs = [
+  {
+    question: "第一次詢問需要準備什麼？",
+    answer: "可以先簡單描述想聊的方向，不需要準備完整資料。若還不知道怎麼說，也可以只留下目前最困擾的一句話。",
+  },
+  {
+    question: "服務是線上還是實體？",
+    answer: "這裡可以依客戶實際服務方式調整。第一版先保留文字位置，等確認後補上線上工具、地點或注意事項。",
+  },
+  {
+    question: "費用怎麼計算？",
+    answer: "可在服務介紹頁放明確費用，或寫成私訊確認。若價格會依服務類型不同，建議放價格區間與詢問方式。",
+  },
+  {
+    question: "如何預約時間？",
+    answer: "第一版先以 LINE 人工確認最穩。後續若預約量增加，再加入線上預約系統與自動通知。",
+  },
+  {
+    question: "表單送出後會通知誰？",
+    answer: "後續表單功能會讓系統把訪客填寫內容送到服務提供者，可接 LINE 官方帳號通知，也可同步備份到資料表。",
+  },
+];
+---
+
+<BaseLayout title="FAQ" description="靜初苑常見問題，說明第一次詢問、服務方式、費用與預約流程。">
+  <section class="page">
+    <div class="narrow center">
+      <p class="eyebrow">FAQ</p>
+      <h1>常見問題</h1>
+      <p class="lead">將重複詢問的內容整理在這裡，讓來訪者在聯絡前先有基本理解。</p>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <div class="narrow">
+      {faqs.map((item) => (
+        <article class="faq-item">
+          <h2>{item.question}</h2>
+          <p>{item.answer}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .faq-section {
+    padding-top: 0;
+  }
+
+  .faq-item {
+    padding: 28px 0;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .faq-item:last-child {
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .faq-item h2 {
+    margin-bottom: 10px;
+    font-size: 24px;
+  }
+</style>
