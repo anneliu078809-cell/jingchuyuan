@@ -49,26 +49,40 @@ const lineWebUrl = "https://line.me/R/ti/p/%40eoo4230y";
     </div>
   </section>
 
-  <!--
-  表單功能暫時隱藏。
-  後續若要啟用，保留一般聯絡表單即可，送出內容以 Email 通知管理者。
   <section class="band">
     <div class="container split">
       <div>
-        <p class="eyebrow">FORM PREVIEW</p>
+        <p class="eyebrow">FORM</p>
         <h2>聯絡表單</h2>
         <p>
-          這份表單目前暫未啟用。後續若要開放填寫，會將訪客留下的內容寄送到指定信箱。
+          如果你想先留下資料，也可以填寫表單。收到後會再透過你留下的聯絡方式回覆。
         </p>
       </div>
-      <form class="card" action="#" method="post">
+      <form class="card contact-form" action="https://formsubmit.co/anneliu078809@gmail.com" method="post">
+        <input type="hidden" name="_subject" value="靜初苑網站聯絡表單" />
+        <input type="hidden" name="_template" value="table" />
+        <input type="hidden" name="_captcha" value="false" />
+        <input type="text" name="_honey" autocomplete="off" tabindex="-1" aria-hidden="true" class="form-honey" />
         <label>
           姓名或暱稱
-          <input type="text" name="name" placeholder="請輸入姓名或暱稱" />
+          <input type="text" name="姓名或暱稱" placeholder="請輸入姓名或暱稱" required />
+        </label>
+        <label>
+          想詢問的服務
+          <select name="想詢問的服務" required>
+            <option value="">請選擇</option>
+            <option>問事服務</option>
+            <option>牌卡占卜</option>
+            <option>手工藥香</option>
+            <option>調頻蠟燭</option>
+            <option>家族排列</option>
+            <option>身體經絡放鬆引導</option>
+            <option>還不確定，想先詢問</option>
+          </select>
         </label>
         <label>
           偏好的聯絡方式
-          <select name="contact_type">
+          <select name="偏好的聯絡方式" required>
             <option value="">請選擇</option>
             <option>LINE ID</option>
             <option>電話</option>
@@ -78,17 +92,16 @@ const lineWebUrl = "https://line.me/R/ti/p/%40eoo4230y";
         </label>
         <label>
           聯絡資料
-          <input type="text" name="contact_value" placeholder="請填寫帳號、電話或 Email" />
+          <input type="text" name="聯絡資料" placeholder="請填寫帳號、電話或 Email" required />
         </label>
         <label>
           想聊的方向
-          <textarea name="message" placeholder="可簡單說明目前需求，選填即可"></textarea>
+          <textarea name="想聊的方向" placeholder="可簡單說明目前需求，選填即可"></textarea>
         </label>
-        <button class="button" type="button" data-form-dialog-open>送出表單</button>
+        <button class="button" type="submit">送出表單</button>
       </form>
     </div>
   </section>
-  -->
 
 </BaseLayout>
 
@@ -120,3 +133,26 @@ const lineWebUrl = "https://line.me/R/ti/p/%40eoo4230y";
     });
   });
 </script>
+
+<style>
+  .contact-form {
+    align-self: start;
+  }
+
+  .contact-form .button {
+    width: fit-content;
+    margin-top: 4px;
+    cursor: pointer;
+  }
+
+  .form-honey {
+    position: absolute;
+    left: -9999px;
+  }
+
+  @media (max-width: 640px) {
+    .contact-form .button {
+      width: 100%;
+    }
+  }
+</style>

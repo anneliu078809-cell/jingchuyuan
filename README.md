@@ -33,4 +33,4 @@ Environment variable：
 NODE_VERSION=22
 ```
 
-目前網站以 LINE / Instagram 作為主要聯絡入口。未來若新增表單，方向是一般聯絡表單，送出內容寄到指定 Email 信箱。
+目前網站提供 LINE / Instagram 與聯絡表單。表單送出內容會寄到指定 Email 信箱。
