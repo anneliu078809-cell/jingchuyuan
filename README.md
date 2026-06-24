@@ -1,43 +1,36 @@
-# Astro Starter Kit: Minimal
+# 靜初苑網站
 
-```sh
-npm create astro@latest -- --template minimal
+Astro 靜態網站，部署到 Cloudflare Pages。
+
+## 常用指令
+
+```bash
+npm install
+npm run dev
+npm run build
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
+本機開發網址：
 
 ```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+http://127.0.0.1:4321/
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Cloudflare Pages
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+Build 設定：
 
-Any static assets, like images, can be placed in the `public/` directory.
+```text
+Framework preset: Astro
+Build command: npm run build
+Build output directory: dist
+Root directory: /
+```
 
-## 🧞 Commands
+Environment variable：
 
-All commands are run from the root of the project, from a terminal:
+```text
+NODE_VERSION=22
+```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+目前網站以 LINE / Instagram 作為主要聯絡入口。未來若新增表單，方向是一般聯絡表單，送出內容寄到指定 Email 信箱。
