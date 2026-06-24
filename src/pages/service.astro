@@ -4,39 +4,33 @@ import PictureSlot from "../components/PictureSlot.astro";
 
 const services = [
   {
-    title: "💕問事服務",
-    price: "$2600",
-    meta: "1~1.5hr",
+    title: "問事服務",
+    meta: "$2,600 / 1 到 1.5 小時",
     description: "透過一對一對話整理當前困惑，看見事件背後的狀態與下一步方向。",
   },
   {
-    title: "💕牌卡占卜",
-    price: "$200",
-    meta: "10分鐘",
+    title: "牌卡占卜",
+    meta: "$200 / 10 分鐘",
     description: "以牌卡作為提醒與映照，協助聚焦問題、釐清選擇與目前能量流向。",
   },
   {
-    title: "💕手工藥香",
-    price: "$1690",
-    meta: "70g",
+    title: "手工藥香",
+    meta: "$1,690 / 70g",
     description: "手工製作的藥香，適合用於日常靜心、空間安定與個人儀式感整理。",
   },
   {
-    title: "💕調頻蠟燭",
-    price: "$1200",
-    meta: "200~220g",
+    title: "調頻蠟燭",
+    meta: "$1,200 / 200 到 220g",
     description: "結合香氣與燭光陪伴，為冥想、放鬆或空間轉換建立柔和穩定的氛圍。",
   },
   {
-    title: "💕家族排列",
-    price: "個案 / 團體",
-    meta: "依場次確認",
+    title: "家族排列",
+    meta: "個案 / 團體，費用與時間請私訊確認",
     description: "透過排列方式看見關係與系統中的牽動，讓卡住的議題有機會被重新理解。",
   },
   {
-    title: "💕身體經絡放鬆引導",
-    price: "$2000",
-    meta: "1hr",
+    title: "身體經絡放鬆引導",
+    meta: "$2,000 / 1 小時",
     description: "以身體覺察與經絡放鬆引導，陪你回到身體，釋放累積的緊繃與壓力。",
   },
 ];
@@ -76,14 +70,9 @@ const services = [
         {
           services.map((service) => (
             <article class="card service-card">
-              <div>
-                <h3>{service.title}</h3>
-                <p>{service.description}</p>
-              </div>
-              <div class="service-info">
-                <span class="service-price">{service.price}</span>
-                <span class="service-meta">{service.meta}</span>
-              </div>
+              <h3>{service.title}</h3>
+              <p class="service-price-tag">{service.meta}</p>
+              <p>{service.description}</p>
             </article>
           ))
         }
@@ -124,54 +113,51 @@ const services = [
   }
 
   .service-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .service-card {
-    display: grid;
+    display: flex;
     min-height: 238px;
-    align-content: space-between;
-    gap: 28px;
+    flex-direction: column;
   }
 
   .service-card h3 {
+    margin-bottom: 12px;
     color: var(--color-gold-dark);
   }
 
-  .service-card p {
+  .service-card p:last-child {
     margin-bottom: 0;
   }
 
-  .service-info {
+  .service-price-tag {
     display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 14px;
-    padding-top: 18px;
-    border-top: 1px solid var(--color-line);
-  }
-
-  .service-price {
-    color: var(--color-text);
-    font-size: 24px;
-    line-height: 1.2;
-  }
-
-  .service-meta {
-    color: var(--color-muted);
+    align-items: center;
+    width: fit-content;
+    margin: 0 0 18px;
+    padding: 10px 12px 10px 14px;
+    border: 1px solid rgba(128, 85, 44, 0.34);
+    background: rgba(255, 250, 244, 0.78);
+    color: #654022;
     font-size: 14px;
-    text-align: right;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  @media (max-width: 900px) {
+    .service-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 
   @media (max-width: 640px) {
-    .service-info {
-      align-items: flex-start;
-      flex-direction: column;
-      gap: 6px;
+    .service-grid {
+      grid-template-columns: 1fr;
     }
 
-    .service-meta {
-      text-align: left;
+    .service-card {
+      min-height: 0;
     }
   }
 </style>
