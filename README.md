@@ -34,6 +34,9 @@ NODE_VERSION=22
 RESEND_API_KEY=你的 Resend API Key
 CONTACT_TO_EMAIL=jingchuyuan1413@gmail.com
 CONTACT_FROM_EMAIL=已在 Resend 驗證的寄件信箱（選填）
+PUBLIC_TURNSTILE_SITE_KEY=Cloudflare Turnstile site key
+TURNSTILE_SECRET_KEY=Cloudflare Turnstile secret key
+CONTACT_ALLOWED_ORIGINS=https://jingchuyuan-1zx.pages.dev,https://你的正式網域
 ```
 
-目前網站提供 LINE / Instagram 與聯絡表單。表單會送到 Cloudflare Pages Function，再透過 Resend 寄到 `CONTACT_TO_EMAIL` 指定的信箱。
+目前網站提供 LINE / Instagram 與聯絡表單。表單會先經過 Cloudflare Pages Function 的來源檢查、欄位長度限制、Turnstile 驗證與簡單頻率限制，再透過 Resend 寄到 `CONTACT_TO_EMAIL` 指定的信箱。

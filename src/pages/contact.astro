@@ -6,6 +6,7 @@ const lineAppUrl = "line://ti/p/%40eoo4230y";
 const lineWebUrl = "https://line.me/R/ti/p/%40eoo4230y";
 const contactEmail = "jingchuyuan1413@gmail.com";
 const contactPhone = "0981328622";
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 ---
 
 <BaseLayout
@@ -75,7 +76,7 @@ const contactPhone = "0981328622";
         <p class="form-status" data-contact-status hidden></p>
         <label>
           姓名或暱稱
-          <input type="text" name="姓名或暱稱" placeholder="請輸入姓名或暱稱" required />
+          <input type="text" name="姓名或暱稱" placeholder="請輸入姓名或暱稱" maxlength="80" required />
         </label>
         <label>
           想詢問的服務
@@ -102,18 +103,27 @@ const contactPhone = "0981328622";
         </label>
         <label>
           聯絡資料
-          <input type="text" name="聯絡資料" placeholder="請填寫帳號、電話或 Email" required />
+          <input type="text" name="聯絡資料" placeholder="請填寫帳號、電話或 Email" maxlength="160" required />
         </label>
         <label>
           想聊的方向
-          <textarea name="想聊的方向" placeholder="可簡單說明目前需求，選填即可"></textarea>
+          <textarea name="想聊的方向" placeholder="可簡單說明目前需求，選填即可" maxlength="1500"></textarea>
         </label>
+        {
+          turnstileSiteKey && (
+            <div class="turnstile-wrap">
+              <div class="cf-turnstile" data-sitekey={turnstileSiteKey}></div>
+            </div>
+          )
+        }
         <button class="button" type="submit">送出表單</button>
       </form>
     </div>
   </section>
 
 </BaseLayout>
+
+{turnstileSiteKey && <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
 
 <script>
   const statusMessage = document.querySelector<HTMLElement>("[data-contact-status]");
@@ -229,6 +239,10 @@ const contactPhone = "0981328622";
   .form-status[data-type="error"] {
     border-color: rgba(150, 67, 54, 0.35);
     color: #8f352b;
+  }
+
+  .turnstile-wrap {
+    min-height: 65px;
   }
 
   @media (max-width: 640px) {

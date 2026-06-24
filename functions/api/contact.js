@@ -1,5 +1,18 @@
 const CONTACT_TO_EMAIL = "jingchuyuan1413@gmail.com";
 const RESEND_API_URL = "https://api.resend.com/emails";
+const TURNSTILE_API_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+const RATE_LIMIT_MAX = 5;
+const FIELD_LIMITS = {
+  "姓名或暱稱": 80,
+  "想詢問的服務": 40,
+  "偏好的聯絡方式": 40,
+  "聯絡資料": 160,
+  "想聊的方向": 1500,
+};
+
+const rateLimitStore = globalThis.__contactRateLimitStore || new Map();
+globalThis.__contactRateLimitStore = rateLimitStore;
 
 const redirectTo = (request, search) => {
   const url = new URL(request.url);
@@ -7,6 +20,84 @@ const redirectTo = (request, search) => {
 };
 
 const getField = (formData, name) => String(formData.get(name) || "").trim();
+
+const isFieldTooLong = ([label, value]) => value.length > FIELD_LIMITS[label];
+
+const getAllowedOrigins = (request, env) => {
+  const currentOrigin = new URL(request.url).origin;
+  const configuredOrigins = String(env.CONTACT_ALLOWED_ORIGINS || "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+  return new Set([currentOrigin, ...configuredOrigins]);
+};
+
+const hasAllowedOrigin = (request, env) => {
+  const origin = request.headers.get("Origin");
+
+  if (!origin) {
+    return true;
+  }
+
+  return getAllowedOrigins(request, env).has(origin);
+};
+
+const getClientIp = (request) => request.headers.get("CF-Connecting-IP") || request.headers.get("X-Forwarded-For") || "unknown";
+
+const isRateLimited = (request) => {
+  const now = Date.now();
+  const clientIp = getClientIp(request);
+  const current = rateLimitStore.get(clientIp);
+
+  if (!current || current.resetAt <= now) {
+    rateLimitStore.set(clientIp, {
+      count: 1,
+      resetAt: now + RATE_LIMIT_WINDOW_MS,
+    });
+    return false;
+  }
+
+  current.count += 1;
+  return current.count > RATE_LIMIT_MAX;
+};
+
+const verifyTurnstile = async (request, env, formData) => {
+  if (!env.TURNSTILE_SECRET_KEY) {
+    return true;
+  }
+
+  const token = getField(formData, "cf-turnstile-response");
+
+  if (!token) {
+    console.error("Missing Turnstile token");
+    return false;
+  }
+
+  const body = new URLSearchParams({
+    secret: env.TURNSTILE_SECRET_KEY,
+    response: token,
+    remoteip: getClientIp(request),
+  });
+
+  const response = await fetch(TURNSTILE_API_URL, {
+    method: "POST",
+    body,
+  });
+
+  if (!response.ok) {
+    console.error("Turnstile verification HTTP error", response.status, await response.text());
+    return false;
+  }
+
+  const result = await response.json();
+
+  if (!result.success) {
+    console.error("Turnstile verification failed", JSON.stringify(result["error-codes"] || []));
+  }
+
+  return Boolean(result.success);
+};
 
 const escapeHtml = (value) =>
   value
@@ -36,6 +127,16 @@ const renderMessageHtml = (fields) => {
 };
 
 export async function onRequestPost({ request, env }) {
+  if (!hasAllowedOrigin(request, env)) {
+    console.error("Blocked contact form request from disallowed origin", request.headers.get("Origin"));
+    return redirectTo(request, "?error=1");
+  }
+
+  if (isRateLimited(request)) {
+    console.error("Rate limited contact form request", getClientIp(request));
+    return redirectTo(request, "?error=1");
+  }
+
   if (!env.RESEND_API_KEY) {
     console.error("Missing RESEND_API_KEY");
     return redirectTo(request, "?error=1");
@@ -46,6 +147,10 @@ export async function onRequestPost({ request, env }) {
 
     if (getField(formData, "_honey")) {
       return redirectTo(request, "?sent=1");
+    }
+
+    if (!(await verifyTurnstile(request, env, formData))) {
+      return redirectTo(request, "?error=1");
     }
 
     const fields = [
@@ -60,6 +165,11 @@ export async function onRequestPost({ request, env }) {
 
     if (missingRequired) {
       console.error("Missing required contact form field");
+      return redirectTo(request, "?error=1");
+    }
+
+    if (fields.some(isFieldTooLong)) {
+      console.error("Contact form field exceeds length limit");
       return redirectTo(request, "?error=1");
     }
 
