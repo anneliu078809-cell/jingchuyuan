@@ -70,4 +70,6 @@ Cloudflare 需要設定：
 - `TURNSTILE_SECRET_KEY`：Cloudflare Turnstile widget 的 secret key。請用 Secret 類型保存。
 - `CONTACT_ALLOWED_ORIGINS`：允許送出表單的網址，逗號分隔。未設定時會允許目前部署網址本身。
 
+`PUBLIC_TURNSTILE_SITE_KEY` 與 `TURNSTILE_SECRET_KEY` 必須一起設定後重新部署。若只設定 `TURNSTILE_SECRET_KEY`，前端不會產生 Turnstile token，後端 log 會出現 `missing-turnstile-token`，表單會送出失敗。
+
 正式上線建議在 Cloudflare WAF 另外加一條 rate limiting rule：限制 `/api/contact` 每個 IP 每 10 分鐘最多 3 到 5 次。

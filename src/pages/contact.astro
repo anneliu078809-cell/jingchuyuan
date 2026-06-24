@@ -71,7 +71,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
           如果你想先留下資料，也可以填寫表單。收到後會再透過你留下的聯絡方式回覆。
         </p>
       </div>
-      <form class="card contact-form" action="/api/contact" method="post">
+      <form class="card contact-form" action="/api/contact" method="post" data-contact-form>
         <input type="text" name="_honey" autocomplete="off" tabindex="-1" aria-hidden="true" class="form-honey" />
         <p class="form-status" data-contact-status hidden></p>
         <label>
@@ -126,20 +126,67 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 {turnstileSiteKey && <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
 
 <script>
+  const contactForm = document.querySelector<HTMLFormElement>("[data-contact-form]");
   const statusMessage = document.querySelector<HTMLElement>("[data-contact-status]");
-  const urlParams = new URLSearchParams(window.location.search);
+  const contactSubmitButton = contactForm?.querySelector<HTMLButtonElement>('button[type="submit"]');
 
-  if (statusMessage && urlParams.get("sent") === "1") {
-    statusMessage.hidden = false;
-    statusMessage.textContent = "表單已送出，收到後會再透過你留下的方式回覆。";
-    statusMessage.dataset.type = "success";
-  }
+  const showFormStatus = (message: string, type: "success" | "error") => {
+    if (!statusMessage) {
+      return;
+    }
 
-  if (statusMessage && urlParams.get("error") === "1") {
     statusMessage.hidden = false;
-    statusMessage.textContent = "表單暫時無法送出，請稍後再試，或直接透過 LINE 聯絡。";
-    statusMessage.dataset.type = "error";
-  }
+    statusMessage.textContent = message;
+    statusMessage.dataset.type = type;
+  };
+
+  const resetTurnstile = () => {
+    const turnstile = (window as Window & { turnstile?: { reset?: () => void } }).turnstile;
+    turnstile?.reset?.();
+  };
+
+  contactForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    if (!contactSubmitButton) {
+      return;
+    }
+
+    contactSubmitButton.disabled = true;
+
+    try {
+      const response = await fetch(contactForm.action, {
+        method: contactForm.method,
+        body: new FormData(contactForm),
+        headers: {
+          Accept: "application/json",
+          "X-Requested-With": "fetch",
+        },
+      });
+      const result = (await response.json().catch(() => null)) as { ok?: boolean; message?: string } | null;
+
+      if (!response.ok || !result?.ok) {
+        const message = result?.message || "表單暫時無法送出，請稍後再試，或直接透過 LINE 聯絡。";
+        showFormStatus(message, "error");
+        window.alert(message);
+        resetTurnstile();
+        return;
+      }
+
+      const message = result.message || "發送成功";
+      contactForm.reset();
+      showFormStatus(message, "success");
+      window.alert(message);
+      resetTurnstile();
+    } catch {
+      const message = "表單暫時無法送出，請稍後再試，或直接透過 LINE 聯絡。";
+      showFormStatus(message, "error");
+      window.alert(message);
+      resetTurnstile();
+    } finally {
+      contactSubmitButton.disabled = false;
+    }
+  });
 
   const isMobileDevice = () =>
     window.matchMedia("(pointer: coarse)").matches ||
@@ -220,6 +267,11 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
     width: fit-content;
     margin-top: 4px;
     cursor: pointer;
+  }
+
+  .contact-form .button:disabled {
+    cursor: wait;
+    opacity: 0.62;
   }
 
   .form-honey {

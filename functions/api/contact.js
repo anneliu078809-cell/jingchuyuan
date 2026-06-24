@@ -14,9 +14,42 @@ const FIELD_LIMITS = {
 const rateLimitStore = globalThis.__contactRateLimitStore || new Map();
 globalThis.__contactRateLimitStore = rateLimitStore;
 
-const redirectTo = (request, search) => {
-  const url = new URL(request.url);
-  return Response.redirect(`${url.origin}/contact/${search}`, 303);
+const jsonResponse = (body, status = 200) => {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "no-store",
+    },
+  });
+};
+
+const errorResponse = (code, message = "表單暫時無法送出，請稍後再試，或直接透過 LINE 聯絡。") => {
+  return jsonResponse(
+    {
+      ok: false,
+      code,
+      message,
+    },
+    400,
+  );
+};
+
+const successResponse = () => {
+  return jsonResponse({
+    ok: true,
+    message: "發送成功",
+  });
+};
+
+const logContactError = (code, detail = {}) => {
+  console.error(
+    "Contact form error",
+    JSON.stringify({
+      code,
+      ...detail,
+    }),
+  );
 };
 
 const getField = (formData, name) => String(formData.get(name) || "").trim();
@@ -70,7 +103,9 @@ const verifyTurnstile = async (request, env, formData) => {
   const token = getField(formData, "cf-turnstile-response");
 
   if (!token) {
-    console.error("Missing Turnstile token");
+    logContactError("missing-turnstile-token", {
+      hint: "TURNSTILE_SECRET_KEY is set, but the form did not submit cf-turnstile-response. Check PUBLIC_TURNSTILE_SITE_KEY build variable and redeploy.",
+    });
     return false;
   }
 
@@ -86,14 +121,19 @@ const verifyTurnstile = async (request, env, formData) => {
   });
 
   if (!response.ok) {
-    console.error("Turnstile verification HTTP error", response.status, await response.text());
+    logContactError("turnstile-http-error", {
+      status: response.status,
+      body: await response.text(),
+    });
     return false;
   }
 
   const result = await response.json();
 
   if (!result.success) {
-    console.error("Turnstile verification failed", JSON.stringify(result["error-codes"] || []));
+    logContactError("turnstile-verification-failed", {
+      errors: result["error-codes"] || [],
+    });
   }
 
   return Boolean(result.success);
@@ -128,29 +168,34 @@ const renderMessageHtml = (fields) => {
 
 export async function onRequestPost({ request, env }) {
   if (!hasAllowedOrigin(request, env)) {
-    console.error("Blocked contact form request from disallowed origin", request.headers.get("Origin"));
-    return redirectTo(request, "?error=1");
+    logContactError("blocked-origin", {
+      origin: request.headers.get("Origin"),
+      expected: Array.from(getAllowedOrigins(request, env)),
+    });
+    return errorResponse("blocked-origin");
   }
 
   if (isRateLimited(request)) {
-    console.error("Rate limited contact form request", getClientIp(request));
-    return redirectTo(request, "?error=1");
+    logContactError("rate-limited", {
+      clientIp: getClientIp(request),
+    });
+    return errorResponse("rate-limited");
   }
 
   if (!env.RESEND_API_KEY) {
-    console.error("Missing RESEND_API_KEY");
-    return redirectTo(request, "?error=1");
+    logContactError("missing-resend-api-key");
+    return errorResponse("missing-resend-api-key");
   }
 
   try {
     const formData = await request.formData();
 
     if (getField(formData, "_honey")) {
-      return redirectTo(request, "?sent=1");
+      return successResponse();
     }
 
     if (!(await verifyTurnstile(request, env, formData))) {
-      return redirectTo(request, "?error=1");
+      return errorResponse("turnstile-failed");
     }
 
     const fields = [
@@ -164,13 +209,13 @@ export async function onRequestPost({ request, env }) {
     const missingRequired = fields.slice(0, 4).some(([, value]) => !value);
 
     if (missingRequired) {
-      console.error("Missing required contact form field");
-      return redirectTo(request, "?error=1");
+      logContactError("missing-required-field");
+      return errorResponse("missing-required-field");
     }
 
     if (fields.some(isFieldTooLong)) {
-      console.error("Contact form field exceeds length limit");
-      return redirectTo(request, "?error=1");
+      logContactError("field-too-long");
+      return errorResponse("field-too-long");
     }
 
     const response = await fetch(RESEND_API_URL, {
@@ -189,13 +234,21 @@ export async function onRequestPost({ request, env }) {
     });
 
     if (!response.ok) {
-      console.error("Resend API error", response.status, await response.text());
-      return redirectTo(request, "?error=1");
+      logContactError("resend-api-error", {
+        status: response.status,
+        body: await response.text(),
+        from: env.CONTACT_FROM_EMAIL || "Jingchuyuan Website <onboarding@resend.dev>",
+        to: env.CONTACT_TO_EMAIL || CONTACT_TO_EMAIL,
+      });
+      return errorResponse("resend-api-error");
     }
 
-    return redirectTo(request, "?sent=1");
-  } catch {
-    return redirectTo(request, "?error=1");
+    return successResponse();
+  } catch (error) {
+    logContactError("unexpected-error", {
+      message: error instanceof Error ? error.message : String(error),
+    });
+    return errorResponse("unexpected-error");
   }
 }
 
