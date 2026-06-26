@@ -1,4 +1,5 @@
 const CONTACT_TO_EMAIL = "jingchuyuan1413@gmail.com";
+const CONTACT_FROM_EMAIL = "Jingchuyuan Website <noreply@jingchuyuan.com>";
 const RESEND_API_URL = "https://api.resend.com/emails";
 const TURNSTILE_API_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
@@ -225,7 +226,7 @@ export async function onRequestPost({ request, env }) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: env.CONTACT_FROM_EMAIL || "Jingchuyuan Website <onboarding@resend.dev>",
+        from: env.CONTACT_FROM_EMAIL || CONTACT_FROM_EMAIL,
         to: env.CONTACT_TO_EMAIL || CONTACT_TO_EMAIL,
         subject: "靜初苑網站聯絡表單",
         html: renderMessageHtml(fields),
@@ -237,7 +238,7 @@ export async function onRequestPost({ request, env }) {
       logContactError("resend-api-error", {
         status: response.status,
         body: await response.text(),
-        from: env.CONTACT_FROM_EMAIL || "Jingchuyuan Website <onboarding@resend.dev>",
+        from: env.CONTACT_FROM_EMAIL || CONTACT_FROM_EMAIL,
         to: env.CONTACT_TO_EMAIL || CONTACT_TO_EMAIL,
       });
       return errorResponse("resend-api-error");
