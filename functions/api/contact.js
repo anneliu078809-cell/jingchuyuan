@@ -1,5 +1,5 @@
 const CONTACT_TO_EMAIL = "jingchuyuan1413@gmail.com";
-const CONTACT_FROM_EMAIL = "Jingchuyuan Website <noreply@jingchuyuan.com>";
+const CONTACT_FROM_EMAIL = "Jingchuyuan <noreply@jingchuyuan.com>";
 const RESEND_API_URL = "https://api.resend.com/emails";
 const TURNSTILE_API_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;

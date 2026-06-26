@@ -28,7 +28,7 @@ Environment variables：
 NODE_VERSION=22
 RESEND_API_KEY=你的 Resend API Key
 CONTACT_TO_EMAIL=jingchuyuan1413@gmail.com
-CONTACT_FROM_EMAIL=Jingchuyuan Website <noreply@jingchuyuan.com>
+CONTACT_FROM_EMAIL=Jingchuyuan <noreply@jingchuyuan.com>
 PUBLIC_TURNSTILE_SITE_KEY=Cloudflare Turnstile site key
 TURNSTILE_SECRET_KEY=Cloudflare Turnstile secret key
 CONTACT_ALLOWED_ORIGINS=https://jingchuyuan-1zx.pages.dev,https://jingchuyuan.com
@@ -65,7 +65,7 @@ Cloudflare 需要設定：
 
 - `RESEND_API_KEY`：Resend 後台產生的 API Key。
 - `CONTACT_TO_EMAIL`：收件信箱，目前是 `jingchuyuan1413@gmail.com`。
-- `CONTACT_FROM_EMAIL`：寄件信箱，正式值為 `Jingchuyuan Website <noreply@jingchuyuan.com>`。`jingchuyuan.com` 必須先在 Resend 完成網域驗證。
+- `CONTACT_FROM_EMAIL`：寄件信箱，正式值為 `Jingchuyuan <noreply@jingchuyuan.com>`。`jingchuyuan.com` 必須先在 Resend 完成網域驗證。
 - `PUBLIC_TURNSTILE_SITE_KEY`：Cloudflare Turnstile widget 的 site key。這是前端可公開值。
 - `TURNSTILE_SECRET_KEY`：Cloudflare Turnstile widget 的 secret key。請用 Secret 類型保存。
 - `CONTACT_ALLOWED_ORIGINS`：允許送出表單的網址，逗號分隔。未設定時會允許目前部署網址本身。

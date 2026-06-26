@@ -33,7 +33,7 @@ Environment variable：
 NODE_VERSION=22
 RESEND_API_KEY=你的 Resend API Key
 CONTACT_TO_EMAIL=jingchuyuan1413@gmail.com
-CONTACT_FROM_EMAIL=Jingchuyuan Website <noreply@jingchuyuan.com>
+CONTACT_FROM_EMAIL=Jingchuyuan <noreply@jingchuyuan.com>
 PUBLIC_TURNSTILE_SITE_KEY=Cloudflare Turnstile site key
 TURNSTILE_SECRET_KEY=Cloudflare Turnstile secret key
 CONTACT_ALLOWED_ORIGINS=https://jingchuyuan-1zx.pages.dev,https://jingchuyuan.com

@@ -12,6 +12,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 <BaseLayout
   title="聯絡"
   description="聯絡靜初苑，可透過 LINE 或 Instagram 詢問服務與預約方式。"
+  image="/images/contact/contact.webp"
 >
   <section class="page">
     <div class="container split">
@@ -71,9 +72,9 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
           如果你想先留下資料，也可以填寫表單。收到後會再透過你留下的聯絡方式回覆。
         </p>
       </div>
-      <form class="card contact-form" action="/api/contact" method="post" data-contact-form>
+      <form class="card contact-form" action="/api/contact" method="post" data-contact-form novalidate>
         <input type="text" name="_honey" autocomplete="off" tabindex="-1" aria-hidden="true" class="form-honey" />
-        <p class="form-status" data-contact-status hidden></p>
+        <p class="form-status" data-contact-status role="alert" aria-live="polite" hidden></p>
         <label>
           姓名或暱稱
           <input type="text" name="姓名或暱稱" placeholder="請輸入姓名或暱稱" maxlength="80" required />
@@ -129,6 +130,12 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
   const contactForm = document.querySelector<HTMLFormElement>("[data-contact-form]");
   const statusMessage = document.querySelector<HTMLElement>("[data-contact-status]");
   const contactSubmitButton = contactForm?.querySelector<HTMLButtonElement>('button[type="submit"]');
+  const requiredFieldMessages = new Map<string, string>([
+    ["姓名或暱稱", "請填寫姓名或暱稱"],
+    ["想詢問的服務", "請選擇想詢問的服務"],
+    ["偏好的聯絡方式", "請選擇偏好的聯絡方式"],
+    ["聯絡資料", "請填寫聯絡資料"],
+  ]);
 
   const showFormStatus = (message: string, type: "success" | "error") => {
     if (!statusMessage) {
@@ -145,10 +152,51 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
     turnstile?.reset?.();
   };
 
+  const clearFieldErrors = () => {
+    contactForm
+      ?.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>("[aria-invalid='true']")
+      .forEach((field) => {
+        field.removeAttribute("aria-invalid");
+      });
+  };
+
+  const getValidationMessages = () => {
+    if (!contactForm) {
+      return [];
+    }
+
+    clearFieldErrors();
+
+    const invalidFields: Array<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> = [];
+    const messages = Array.from(requiredFieldMessages.entries()).flatMap(([fieldName, message]) => {
+      const field = contactForm.elements.namedItem(fieldName) as HTMLInputElement | HTMLSelectElement | null;
+
+      if (!field || field.value.trim()) {
+        return [];
+      }
+
+      field.setAttribute("aria-invalid", "true");
+      invalidFields.push(field);
+      return [message];
+    });
+
+    invalidFields[0]?.focus();
+    return messages;
+  };
+
   contactForm?.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     if (!contactSubmitButton) {
+      return;
+    }
+
+    const validationMessages = getValidationMessages();
+
+    if (validationMessages.length) {
+      const message = `請確認以下欄位：\n${validationMessages.map((item) => `- ${item}`).join("\n")}`;
+      showFormStatus(message, "error");
+      window.alert(message);
       return;
     }
 
@@ -286,11 +334,17 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
     background: rgba(247, 241, 231, 0.72);
     color: var(--color-text);
     font-size: 15px;
+    white-space: pre-line;
   }
 
   .form-status[data-type="error"] {
     border-color: rgba(150, 67, 54, 0.35);
     color: #8f352b;
+  }
+
+  .contact-form :is(input, select, textarea)[aria-invalid="true"] {
+    border-color: rgba(150, 67, 54, 0.72);
+    box-shadow: 0 0 0 3px rgba(150, 67, 54, 0.1);
   }
 
   .turnstile-wrap {

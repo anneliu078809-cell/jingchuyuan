@@ -2,12 +2,36 @@
 interface Props {
   title: string;
   description?: string;
+  image?: string;
 }
 
 const {
   title,
   description = "靜初苑服務網站，提供服務介紹、常見問題與聯絡方式。",
+  image = "/images/home/hero.webp",
 } = Astro.props;
+
+const siteUrl = "https://jingchuyuan.com";
+const canonicalPath = Astro.url.pathname === "/" ? "/" : Astro.url.pathname.replace(/\/?$/, "/");
+const canonicalUrl = new URL(canonicalPath, siteUrl).toString();
+const absoluteImageUrl = new URL(image, siteUrl).toString();
+const pageTitle = title === "首頁" ? "靜初苑" : `${title} | 靜初苑`;
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: "靜初苑",
+  alternateName: "Jingchuyuan",
+  url: siteUrl,
+  email: "jingchuyuan1413@gmail.com",
+  telephone: "0981328622",
+  image: absoluteImageUrl,
+  description,
+  areaServed: "Taiwan",
+  sameAs: [
+    "https://www.instagram.com/jing_chu_yuan",
+    "https://line.me/R/ti/p/%40eoo4230y",
+  ],
+};
 
 const navItems = [
   { href: "/", label: "首頁" },
@@ -32,8 +56,23 @@ const footerItems = [
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
     <meta name="generator" content={Astro.generator} />
-    <title>{title} | 靜初苑</title>
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:site_name" content="靜初苑" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh_TW" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={absoluteImageUrl} />
+    <meta property="og:image:alt" content="靜初苑網站視覺" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={absoluteImageUrl} />
+    <script type="application/ld+json" set:html={JSON.stringify(organizationJsonLd)} />
+    <title>{pageTitle}</title>
   </head>
   <body>
     <header>
