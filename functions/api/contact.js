@@ -11,21 +11,23 @@ const FIELD_LIMITS = {
   "聯絡資料": 160,
   "想聊的方向": 300,
 };
+const LOCAL_DEV_ORIGINS = ["http://127.0.0.1:4321", "http://localhost:4321"];
 
 const rateLimitStore = globalThis.__contactRateLimitStore || new Map();
 globalThis.__contactRateLimitStore = rateLimitStore;
 
-const jsonResponse = (body, status = 200) => {
+const jsonResponse = (body, status = 200, headers = {}) => {
   return new Response(JSON.stringify(body), {
     status,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
       "Cache-Control": "no-store",
+      ...headers,
     },
   });
 };
 
-const errorResponse = (code, message = "表單暫時無法送出，請稍後再試，或直接透過 LINE 聯絡。") => {
+const errorResponse = (code, message = "表單暫時無法送出，請稍後再試，或直接透過 LINE 聯絡。", headers = {}) => {
   return jsonResponse(
     {
       ok: false,
@@ -33,14 +35,15 @@ const errorResponse = (code, message = "表單暫時無法送出，請稍後再�
       message,
     },
     400,
+    headers,
   );
 };
 
-const successResponse = () => {
+const successResponse = (headers = {}) => {
   return jsonResponse({
     ok: true,
     message: "發送成功",
-  });
+  }, 200, headers);
 };
 
 const logContactError = (code, detail = {}) => {
@@ -64,7 +67,7 @@ const getAllowedOrigins = (request, env) => {
     .map((origin) => origin.trim())
     .filter(Boolean);
 
-  return new Set([currentOrigin, ...configuredOrigins]);
+  return new Set([currentOrigin, ...LOCAL_DEV_ORIGINS, ...configuredOrigins]);
 };
 
 const hasAllowedOrigin = (request, env) => {
@@ -75,6 +78,21 @@ const hasAllowedOrigin = (request, env) => {
   }
 
   return getAllowedOrigins(request, env).has(origin);
+};
+
+const getCorsHeaders = (request, env) => {
+  const origin = request.headers.get("Origin");
+
+  if (!origin || !getAllowedOrigins(request, env).has(origin)) {
+    return {};
+  }
+
+  return {
+    "Access-Control-Allow-Origin": origin,
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Accept",
+    Vary: "Origin",
+  };
 };
 
 const getClientIp = (request) => request.headers.get("CF-Connecting-IP") || request.headers.get("X-Forwarded-For") || "unknown";
@@ -168,35 +186,37 @@ const renderMessageHtml = (fields) => {
 };
 
 export async function onRequestPost({ request, env }) {
+  const responseHeaders = getCorsHeaders(request, env);
+
   if (!hasAllowedOrigin(request, env)) {
     logContactError("blocked-origin", {
       origin: request.headers.get("Origin"),
       expected: Array.from(getAllowedOrigins(request, env)),
     });
-    return errorResponse("blocked-origin");
+    return errorResponse("blocked-origin", undefined, responseHeaders);
   }
 
   if (isRateLimited(request)) {
     logContactError("rate-limited", {
       clientIp: getClientIp(request),
     });
-    return errorResponse("rate-limited");
+    return errorResponse("rate-limited", undefined, responseHeaders);
   }
 
   if (!env.RESEND_API_KEY) {
     logContactError("missing-resend-api-key");
-    return errorResponse("missing-resend-api-key");
+    return errorResponse("missing-resend-api-key", undefined, responseHeaders);
   }
 
   try {
     const formData = await request.formData();
 
     if (getField(formData, "_honey")) {
-      return successResponse();
+      return successResponse(responseHeaders);
     }
 
     if (!(await verifyTurnstile(request, env, formData))) {
-      return errorResponse("turnstile-failed");
+      return errorResponse("turnstile-failed", undefined, responseHeaders);
     }
 
     const fields = [
@@ -211,12 +231,12 @@ export async function onRequestPost({ request, env }) {
 
     if (missingRequired) {
       logContactError("missing-required-field");
-      return errorResponse("missing-required-field");
+      return errorResponse("missing-required-field", undefined, responseHeaders);
     }
 
     if (fields.some(isFieldTooLong)) {
       logContactError("field-too-long");
-      return errorResponse("field-too-long");
+      return errorResponse("field-too-long", undefined, responseHeaders);
     }
 
     const response = await fetch(RESEND_API_URL, {
@@ -241,16 +261,23 @@ export async function onRequestPost({ request, env }) {
         from: env.CONTACT_FROM_EMAIL || CONTACT_FROM_EMAIL,
         to: env.CONTACT_TO_EMAIL || CONTACT_TO_EMAIL,
       });
-      return errorResponse("resend-api-error");
+      return errorResponse("resend-api-error", undefined, responseHeaders);
     }
 
-    return successResponse();
+    return successResponse(responseHeaders);
   } catch (error) {
     logContactError("unexpected-error", {
       message: error instanceof Error ? error.message : String(error),
     });
-    return errorResponse("unexpected-error");
+    return errorResponse("unexpected-error", undefined, responseHeaders);
   }
+}
+
+export function onRequestOptions({ request, env }) {
+  return new Response(null, {
+    status: 204,
+    headers: getCorsHeaders(request, env),
+  });
 }
 
 export function onRequest() {

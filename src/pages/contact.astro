@@ -163,6 +163,16 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
     turnstile?.reset?.();
   };
 
+  const getContactAction = () => {
+    const localHosts = new Set(["localhost", "127.0.0.1"]);
+
+    if (localHosts.has(window.location.hostname)) {
+      return "http://127.0.0.1:4322/api/contact";
+    }
+
+    return contactForm?.action || "/api/contact";
+  };
+
   const clearFieldErrors = () => {
     contactForm
       ?.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>("[aria-invalid='true']")
@@ -304,12 +314,11 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
     contactSubmitButton.disabled = true;
 
     try {
-      const response = await fetch(contactForm.action, {
+      const response = await fetch(getContactAction(), {
         method: contactForm.method,
         body: new FormData(contactForm),
         headers: {
           Accept: "application/json",
-          "X-Requested-With": "fetch",
         },
       });
       const result = (await response.json().catch(() => null)) as { ok?: boolean; message?: string } | null;
