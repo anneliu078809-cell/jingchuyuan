@@ -77,11 +77,12 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         <p class="form-status" data-contact-status role="alert" aria-live="polite" hidden></p>
         <label>
           姓名或暱稱
-          <input type="text" name="姓名或暱稱" placeholder="請輸入姓名或暱稱" maxlength="80" required />
+          <input type="text" name="姓名或暱稱" placeholder="請輸入姓名或暱稱" maxlength="10" required data-error-id="name-error" />
+          <span class="field-error" id="name-error" data-field-error hidden></span>
         </label>
         <label>
           想詢問的服務
-          <select name="想詢問的服務" required>
+          <select name="想詢問的服務" required data-error-id="service-error">
             <option value="">請選擇</option>
             <option>問事服務</option>
             <option>牌卡占卜</option>
@@ -91,24 +92,28 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
             <option>身體經絡放鬆引導</option>
             <option>還不確定，想先詢問</option>
           </select>
+          <span class="field-error" id="service-error" data-field-error hidden></span>
         </label>
         <label>
           偏好的聯絡方式
-          <select name="偏好的聯絡方式" required>
+          <select name="偏好的聯絡方式" required data-error-id="contact-method-error">
             <option value="">請選擇</option>
             <option>LINE ID</option>
             <option>電話</option>
             <option>Email</option>
             <option>Instagram</option>
           </select>
+          <span class="field-error" id="contact-method-error" data-field-error hidden></span>
         </label>
         <label>
           聯絡資料
-          <input type="text" name="聯絡資料" placeholder="請填寫帳號、電話或 Email" maxlength="160" required />
+          <input type="text" name="聯絡資料" placeholder="請填寫帳號、電話或 Email" maxlength="160" required data-error-id="contact-value-error" />
+          <span class="field-error" id="contact-value-error" data-field-error hidden></span>
         </label>
         <label>
           想聊的方向
-          <textarea name="想聊的方向" placeholder="可簡單說明目前需求，選填即可" maxlength="1500"></textarea>
+          <textarea name="想聊的方向" placeholder="可簡單說明目前需求，最多300個字" maxlength="300" data-error-id="message-error"></textarea>
+          <span class="field-error" id="message-error" data-field-error hidden></span>
         </label>
         {
           turnstileSiteKey && (
@@ -136,6 +141,11 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
     ["偏好的聯絡方式", "請選擇偏好的聯絡方式"],
     ["聯絡資料", "請填寫聯絡資料"],
   ]);
+  const fieldMaxLengths = new Map<string, { max: number; message: string }>([
+    ["姓名或暱稱", { max: 10, message: "姓名或暱稱最多 10 個字" }],
+    ["聯絡資料", { max: 160, message: "聯絡資料最多 160 個字" }],
+    ["想聊的方向", { max: 300, message: "想聊的方向最多 300 個字" }],
+  ]);
 
   const showFormStatus = (message: string, type: "success" | "error") => {
     if (!statusMessage) {
@@ -145,6 +155,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
     statusMessage.hidden = false;
     statusMessage.textContent = message;
     statusMessage.dataset.type = type;
+    statusMessage.scrollIntoView({ block: "nearest", behavior: "smooth" });
   };
 
   const resetTurnstile = () => {
@@ -157,6 +168,83 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
       ?.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>("[aria-invalid='true']")
       .forEach((field) => {
         field.removeAttribute("aria-invalid");
+        field.removeAttribute("aria-describedby");
+      });
+
+    contactForm?.querySelectorAll<HTMLElement>("[data-field-error]").forEach((error) => {
+      error.hidden = true;
+      error.textContent = "";
+    });
+  };
+
+  const hideFormStatus = () => {
+    if (!statusMessage) {
+      return;
+    }
+
+    statusMessage.hidden = true;
+    statusMessage.textContent = "";
+    delete statusMessage.dataset.type;
+  };
+
+  const showFieldError = (field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement, message: string) => {
+    const errorId = field.dataset.errorId;
+
+    field.setAttribute("aria-invalid", "true");
+
+    if (!errorId) {
+      return;
+    }
+
+    const error = document.getElementById(errorId);
+
+    if (!error) {
+      return;
+    }
+
+    error.textContent = message;
+    error.hidden = false;
+    field.setAttribute("aria-describedby", errorId);
+  };
+
+  const bindFieldErrorReset = () => {
+    contactForm
+      ?.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>("[data-error-id]")
+      .forEach((field) => {
+        const clearCurrentFieldError = () => {
+          if (!field.value.trim()) {
+            return;
+          }
+
+          field.removeAttribute("aria-invalid");
+          field.removeAttribute("aria-describedby");
+
+          const errorId = field.dataset.errorId;
+          const error = errorId ? document.getElementById(errorId) : null;
+
+          if (error) {
+            error.hidden = true;
+            error.textContent = "";
+          }
+        };
+
+        if (field instanceof HTMLSelectElement) {
+          field.addEventListener("change", clearCurrentFieldError);
+          return;
+        }
+
+        const limitTextInput = () => {
+          const maxLength = Number(field.getAttribute("maxlength"));
+
+          if (Number.isFinite(maxLength) && maxLength > -1 && field.value.length > maxLength) {
+            field.value = field.value.slice(0, maxLength);
+          }
+
+          clearCurrentFieldError();
+        };
+
+        field.addEventListener("input", limitTextInput);
+        field.addEventListener("change", limitTextInput);
       });
   };
 
@@ -168,16 +256,31 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
     clearFieldErrors();
 
     const invalidFields: Array<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> = [];
-    const messages = Array.from(requiredFieldMessages.entries()).flatMap(([fieldName, message]) => {
+    const messages: string[] = [];
+
+    Array.from(requiredFieldMessages.entries()).forEach(([fieldName, message]) => {
       const field = contactForm.elements.namedItem(fieldName) as HTMLInputElement | HTMLSelectElement | null;
 
       if (!field || field.value.trim()) {
-        return [];
+        return;
       }
 
-      field.setAttribute("aria-invalid", "true");
+      showFieldError(field, message);
       invalidFields.push(field);
-      return [message];
+      messages.push(message);
+    });
+
+    Array.from(fieldMaxLengths.entries()).forEach(([fieldName, { max, message }]) => {
+      const field = contactForm.elements.namedItem(fieldName) as HTMLInputElement | HTMLTextAreaElement | null;
+
+      if (!field || field.value.length <= max) {
+        return;
+      }
+
+      field.value = field.value.slice(0, max);
+      showFieldError(field, message);
+      invalidFields.push(field);
+      messages.push(message);
     });
 
     invalidFields[0]?.focus();
@@ -194,9 +297,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
     const validationMessages = getValidationMessages();
 
     if (validationMessages.length) {
-      const message = `請確認以下欄位：\n${validationMessages.map((item) => `- ${item}`).join("\n")}`;
-      showFormStatus(message, "error");
-      window.alert(message);
+      hideFormStatus();
       return;
     }
 
@@ -216,25 +317,25 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
       if (!response.ok || !result?.ok) {
         const message = result?.message || "表單暫時無法送出，請稍後再試，或直接透過 LINE 聯絡。";
         showFormStatus(message, "error");
-        window.alert(message);
         resetTurnstile();
         return;
       }
 
       const message = result.message || "發送成功";
       contactForm.reset();
+      clearFieldErrors();
       showFormStatus(message, "success");
-      window.alert(message);
       resetTurnstile();
     } catch {
       const message = "表單暫時無法送出，請稍後再試，或直接透過 LINE 聯絡。";
       showFormStatus(message, "error");
-      window.alert(message);
       resetTurnstile();
     } finally {
       contactSubmitButton.disabled = false;
     }
   });
+
+  bindFieldErrorReset();
 
   const isMobileDevice = () =>
     window.matchMedia("(pointer: coarse)").matches ||
@@ -340,6 +441,13 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
   .form-status[data-type="error"] {
     border-color: rgba(150, 67, 54, 0.35);
     color: #8f352b;
+  }
+
+  .field-error {
+    margin-top: -10px;
+    color: #8f352b;
+    font-size: 14px;
+    line-height: 1.45;
   }
 
   .contact-form :is(input, select, textarea)[aria-invalid="true"] {

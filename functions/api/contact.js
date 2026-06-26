@@ -5,11 +5,11 @@ const TURNSTILE_API_URL = "https://challenges.cloudflare.com/turnstile/v0/siteve
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX = 5;
 const FIELD_LIMITS = {
-  "姓名或暱稱": 80,
+  "姓名或暱稱": 10,
   "想詢問的服務": 40,
   "偏好的聯絡方式": 40,
   "聯絡資料": 160,
-  "想聊的方向": 1500,
+  "想聊的方向": 300,
 };
 
 const rateLimitStore = globalThis.__contactRateLimitStore || new Map();
