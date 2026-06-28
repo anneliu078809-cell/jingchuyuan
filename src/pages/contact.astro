@@ -20,7 +20,11 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         <p class="eyebrow">CONTACT</p>
         <h1>聯絡與預約</h1>
         <p class="lead">
-          目前建議先以 LINE 官方帳號作為主要聯絡管道，也可以透過 Instagram 詢問服務與預約方式。
+          目前可以Line官方帳號及Instagram 詢問服務與預約方式。
+          謝謝你來到靜初苑。
+          如果最近的生活有些迷惘、疲憊，或只是想找一個能安心說話的地方，我們都很歡迎你。
+          願這裡，成為你偶爾停下腳步、重新整理心情的一處安靜角落。
+          願每一次停下腳步，都是重新認識自己的開始。
         </p>
         <div class="button-row">
           <a
@@ -49,10 +53,10 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
             <dt>Email</dt>
             <dd><a href={`mailto:${contactEmail}`}>{contactEmail}</a></dd>
           </div>
-          <div>
+          <!-- <div>
             <dt>電話</dt>
             <dd><a href={`tel:${contactPhone}`}>{contactPhone}</a></dd>
-          </div>
+          </div> -->
         </dl>
       </div>
       <PictureSlot
@@ -72,13 +76,41 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
           如果你想先留下資料，也可以填寫表單。收到後會再透過你留下的聯絡方式回覆。
         </p>
       </div>
-      <form class="card contact-form" action="/api/contact" method="post" data-contact-form novalidate>
-        <input type="text" name="_honey" autocomplete="off" tabindex="-1" aria-hidden="true" class="form-honey" />
-        <p class="form-status" data-contact-status role="alert" aria-live="polite" hidden></p>
+      <form
+        class="card contact-form"
+        action="/api/contact"
+        method="post"
+        data-contact-form
+        novalidate
+      >
+        <input
+          type="text"
+          name="_honey"
+          autocomplete="off"
+          tabindex="-1"
+          aria-hidden="true"
+          class="form-honey"
+        />
+        <p
+          class="form-status"
+          data-contact-status
+          role="alert"
+          aria-live="polite"
+          hidden
+        >
+        </p>
         <label>
           姓名或暱稱
-          <input type="text" name="姓名或暱稱" placeholder="請輸入姓名或暱稱" maxlength="10" required data-error-id="name-error" />
-          <span class="field-error" id="name-error" data-field-error hidden></span>
+          <input
+            type="text"
+            name="姓名或暱稱"
+            placeholder="請輸入姓名或暱稱"
+            maxlength="10"
+            required
+            data-error-id="name-error"
+          />
+          <span class="field-error" id="name-error" data-field-error hidden
+          ></span>
         </label>
         <label>
           想詢問的服務
@@ -92,33 +124,58 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
             <option>身體經絡放鬆引導</option>
             <option>還不確定，想先詢問</option>
           </select>
-          <span class="field-error" id="service-error" data-field-error hidden></span>
+          <span class="field-error" id="service-error" data-field-error hidden
+          ></span>
         </label>
         <label>
           偏好的聯絡方式
-          <select name="偏好的聯絡方式" required data-error-id="contact-method-error">
+          <select
+            name="偏好的聯絡方式"
+            required
+            data-error-id="contact-method-error"
+          >
             <option value="">請選擇</option>
             <option>LINE ID</option>
             <option>電話</option>
             <option>Email</option>
             <option>Instagram</option>
           </select>
-          <span class="field-error" id="contact-method-error" data-field-error hidden></span>
+          <span
+            class="field-error"
+            id="contact-method-error"
+            data-field-error
+            hidden></span>
         </label>
         <label>
           聯絡資料
-          <input type="text" name="聯絡資料" placeholder="請填寫帳號、電話或 Email" maxlength="160" required data-error-id="contact-value-error" />
-          <span class="field-error" id="contact-value-error" data-field-error hidden></span>
+          <input
+            type="text"
+            name="聯絡資料"
+            placeholder="請填寫帳號、電話或 Email"
+            maxlength="160"
+            required
+            data-error-id="contact-value-error"
+          />
+          <span
+            class="field-error"
+            id="contact-value-error"
+            data-field-error
+            hidden></span>
         </label>
         <label>
           想聊的方向
-          <textarea name="想聊的方向" placeholder="可簡單說明目前需求，最多300個字" maxlength="300" data-error-id="message-error"></textarea>
-          <span class="field-error" id="message-error" data-field-error hidden></span>
+          <textarea
+            name="想聊的方向"
+            placeholder="可簡單說明目前需求，最多300個字"
+            maxlength="300"
+            data-error-id="message-error"></textarea>
+          <span class="field-error" id="message-error" data-field-error hidden
+          ></span>
         </label>
         {
           turnstileSiteKey && (
             <div class="turnstile-wrap">
-              <div class="cf-turnstile" data-sitekey={turnstileSiteKey}></div>
+              <div class="cf-turnstile" data-sitekey={turnstileSiteKey} />
             </div>
           )
         }
@@ -126,15 +183,28 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
       </form>
     </div>
   </section>
-
 </BaseLayout>
 
-{turnstileSiteKey && <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+{
+  turnstileSiteKey && (
+    <script
+      src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+      async
+      defer
+    />
+  )
+}
 
 <script>
-  const contactForm = document.querySelector<HTMLFormElement>("[data-contact-form]");
-  const statusMessage = document.querySelector<HTMLElement>("[data-contact-status]");
-  const contactSubmitButton = contactForm?.querySelector<HTMLButtonElement>('button[type="submit"]');
+  const contactForm = document.querySelector<HTMLFormElement>(
+    "[data-contact-form]",
+  );
+  const statusMessage = document.querySelector<HTMLElement>(
+    "[data-contact-status]",
+  );
+  const contactSubmitButton = contactForm?.querySelector<HTMLButtonElement>(
+    'button[type="submit"]',
+  );
   const requiredFieldMessages = new Map<string, string>([
     ["姓名或暱稱", "請填寫姓名或暱稱"],
     ["想詢問的服務", "請選擇想詢問的服務"],
@@ -159,7 +229,9 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
   };
 
   const resetTurnstile = () => {
-    const turnstile = (window as Window & { turnstile?: { reset?: () => void } }).turnstile;
+    const turnstile = (
+      window as Window & { turnstile?: { reset?: () => void } }
+    ).turnstile;
     turnstile?.reset?.();
   };
 
@@ -175,16 +247,20 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 
   const clearFieldErrors = () => {
     contactForm
-      ?.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>("[aria-invalid='true']")
+      ?.querySelectorAll<
+        HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+      >("[aria-invalid='true']")
       .forEach((field) => {
         field.removeAttribute("aria-invalid");
         field.removeAttribute("aria-describedby");
       });
 
-    contactForm?.querySelectorAll<HTMLElement>("[data-field-error]").forEach((error) => {
-      error.hidden = true;
-      error.textContent = "";
-    });
+    contactForm
+      ?.querySelectorAll<HTMLElement>("[data-field-error]")
+      .forEach((error) => {
+        error.hidden = true;
+        error.textContent = "";
+      });
   };
 
   const hideFormStatus = () => {
@@ -197,7 +273,10 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
     delete statusMessage.dataset.type;
   };
 
-  const showFieldError = (field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement, message: string) => {
+  const showFieldError = (
+    field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+    message: string,
+  ) => {
     const errorId = field.dataset.errorId;
 
     field.setAttribute("aria-invalid", "true");
@@ -219,7 +298,9 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 
   const bindFieldErrorReset = () => {
     contactForm
-      ?.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>("[data-error-id]")
+      ?.querySelectorAll<
+        HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+      >("[data-error-id]")
       .forEach((field) => {
         const clearCurrentFieldError = () => {
           if (!field.value.trim()) {
@@ -246,7 +327,11 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         const limitTextInput = () => {
           const maxLength = Number(field.getAttribute("maxlength"));
 
-          if (Number.isFinite(maxLength) && maxLength > -1 && field.value.length > maxLength) {
+          if (
+            Number.isFinite(maxLength) &&
+            maxLength > -1 &&
+            field.value.length > maxLength
+          ) {
             field.value = field.value.slice(0, maxLength);
           }
 
@@ -265,33 +350,45 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 
     clearFieldErrors();
 
-    const invalidFields: Array<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> = [];
+    const invalidFields: Array<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    > = [];
     const messages: string[] = [];
 
-    Array.from(requiredFieldMessages.entries()).forEach(([fieldName, message]) => {
-      const field = contactForm.elements.namedItem(fieldName) as HTMLInputElement | HTMLSelectElement | null;
+    Array.from(requiredFieldMessages.entries()).forEach(
+      ([fieldName, message]) => {
+        const field = contactForm.elements.namedItem(fieldName) as
+          | HTMLInputElement
+          | HTMLSelectElement
+          | null;
 
-      if (!field || field.value.trim()) {
-        return;
-      }
+        if (!field || field.value.trim()) {
+          return;
+        }
 
-      showFieldError(field, message);
-      invalidFields.push(field);
-      messages.push(message);
-    });
+        showFieldError(field, message);
+        invalidFields.push(field);
+        messages.push(message);
+      },
+    );
 
-    Array.from(fieldMaxLengths.entries()).forEach(([fieldName, { max, message }]) => {
-      const field = contactForm.elements.namedItem(fieldName) as HTMLInputElement | HTMLTextAreaElement | null;
+    Array.from(fieldMaxLengths.entries()).forEach(
+      ([fieldName, { max, message }]) => {
+        const field = contactForm.elements.namedItem(fieldName) as
+          | HTMLInputElement
+          | HTMLTextAreaElement
+          | null;
 
-      if (!field || field.value.length <= max) {
-        return;
-      }
+        if (!field || field.value.length <= max) {
+          return;
+        }
 
-      field.value = field.value.slice(0, max);
-      showFieldError(field, message);
-      invalidFields.push(field);
-      messages.push(message);
-    });
+        field.value = field.value.slice(0, max);
+        showFieldError(field, message);
+        invalidFields.push(field);
+        messages.push(message);
+      },
+    );
 
     invalidFields[0]?.focus();
     return messages;
@@ -321,10 +418,15 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
           Accept: "application/json",
         },
       });
-      const result = (await response.json().catch(() => null)) as { ok?: boolean; message?: string } | null;
+      const result = (await response.json().catch(() => null)) as {
+        ok?: boolean;
+        message?: string;
+      } | null;
 
       if (!response.ok || !result?.ok) {
-        const message = result?.message || "表單暫時無法送出，請稍後再試，或直接透過 LINE 聯絡。";
+        const message =
+          result?.message ||
+          "表單暫時無法送出，請稍後再試，或直接透過 LINE 聯絡。";
         showFormStatus(message, "error");
         resetTurnstile();
         return;
@@ -350,28 +452,32 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
     window.matchMedia("(pointer: coarse)").matches ||
     /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 
-  document.querySelectorAll<HTMLAnchorElement>("[data-line-app-url][data-line-web-url]").forEach((link) => {
-    link.addEventListener("click", (event) => {
-      const appUrl = link.dataset.lineAppUrl;
-      const webUrl = link.dataset.lineWebUrl;
+  document
+    .querySelectorAll<HTMLAnchorElement>(
+      "[data-line-app-url][data-line-web-url]",
+    )
+    .forEach((link) => {
+      link.addEventListener("click", (event) => {
+        const appUrl = link.dataset.lineAppUrl;
+        const webUrl = link.dataset.lineWebUrl;
 
-      if (!appUrl || !webUrl) {
-        return;
-      }
-
-      if (!isMobileDevice()) {
-        return;
-      }
-
-      event.preventDefault();
-      window.location.href = appUrl;
-      window.setTimeout(() => {
-        if (!document.hidden) {
-          window.location.href = webUrl;
+        if (!appUrl || !webUrl) {
+          return;
         }
-      }, 900);
+
+        if (!isMobileDevice()) {
+          return;
+        }
+
+        event.preventDefault();
+        window.location.href = appUrl;
+        window.setTimeout(() => {
+          if (!document.hidden) {
+            window.location.href = webUrl;
+          }
+        }, 900);
+      });
     });
-  });
 </script>
 
 <style>
