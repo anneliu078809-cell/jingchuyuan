@@ -7,7 +7,7 @@ interface Props {
 
 const {
   title,
-  description = "靜初苑服務網站，提供服務介紹、常見問題與聯絡方式。",
+  description = "靜初苑服務網站，提供服務方案、常見問題與聯絡方式。",
   image = "/images/home/hero.webp",
 } = Astro.props;
 
@@ -35,14 +35,14 @@ const organizationJsonLd = {
 
 const navItems = [
   { href: "/", label: "首頁" },
-  { href: "/service/", label: "服務介紹" },
+  { href: "/service/", label: "服務方案" },
   { href: "/about/", label: "關於我" },
-  { href: "/faq/", label: "FAQ" },
-  { href: "/contact/", label: "聯絡" },
+  { href: "/faq/", label: "常見問題" },
+  { href: "/contact/", label: "線上預約" },
 ];
 
 const footerItems = [
-  { href: "/service/", label: "服務介紹" },
+  { href: "/service/", label: "服務方案" },
   { href: "/faq/", label: "常見問題" },
   { href: "/contact/", label: "聯絡預約" },
 ];

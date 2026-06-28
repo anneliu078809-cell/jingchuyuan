@@ -1,10 +1,10 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const faqs = [
+const 常見問題s = [
   {
     question: "第一次詢問需要準備什麼？",
-    answer: "可以先簡單描述想聊的方向，不需要準備完整資料。若還不知道怎麼說，也可以只留下目前最困擾的一句話。",
+    answer: "不用特別準備。帶著現在的心情前來就好。如果心裡已有想聊的事情，可以提前想一想，留下目前最困擾的一句話；如果還沒有整理好，也沒有關係。我們會陪你慢慢梳理，找到真正想面對的方向。",
   },
   {
     question: "服務是線上還是實體？",
@@ -20,7 +20,7 @@ const faqs = [
   },
   {
     question: "如果我還不知道怎麼說，可以預約嗎？",
-    answer: "可以。你不需要先整理成完整的故事，只要先說出目前最困擾、最想被理解的一件事，就可以從那裡開始。",
+    answer: "當然可以。很多人第一次來，都只是覺得最近有些迷惘、壓力很大，或想找個地方安靜聊聊。不用擔心自己是否「問得對」，從你的近況開始，說出目前最困擾的一件事，就是最好的開始。",
   },
   ,
   {
@@ -30,19 +30,18 @@ const faqs = [
 ];
 ---
 
-<BaseLayout title="FAQ" description="靜初苑常見問題，說明第一次詢問、服務方式、費用與預約流程。">
+<BaseLayout title="常見問題" description="靜初苑常見問題，說明第一次詢問、服務方式、費用與預約流程。">
   <section class="page">
     <div class="narrow center">
-      <p class="eyebrow">FAQ</p>
       <h1>常見問題</h1>
-      <p class="lead">將重複詢問的內容整理在這裡，讓來訪者在聯絡前先有基本理解。</p>
+      <p class="lead">第一次來到靜初苑，心中或許會有一些疑問。我們將常見的問題整理在這裡，希望能陪伴你先認識我們，也讓每一次聯繫，都從安心開始。</p>
     </div>
   </section>
 
-  <section class="faq-section">
+  <section class="常見問題-section">
     <div class="narrow">
-      {faqs.map((item) => (
-        <article class="faq-item">
+      {常見問題s.map((item) => (
+        <article class="常見問題-item">
           <h2>{item.question}</h2>
           <p>{item.answer}</p>
         </article>
@@ -52,20 +51,20 @@ const faqs = [
 </BaseLayout>
 
 <style>
-  .faq-section {
+  .常見問題-section {
     padding-top: 0;
   }
 
-  .faq-item {
+  .常見問題-item {
     padding: 28px 0;
     border-top: 1px solid var(--color-line);
   }
 
-  .faq-item:last-child {
+  .常見問題-item:last-child {
     border-bottom: 1px solid var(--color-line);
   }
 
-  .faq-item h2 {
+  .常見問題-item h2 {
     margin-bottom: 10px;
     font-size: 24px;
   }
