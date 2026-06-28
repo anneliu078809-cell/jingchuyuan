@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>靜初苑網站專案說明</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f8f5ef;
+        --paper: #fffdf8;
+        --ink: #28231e;
+        --muted: #6f675d;
+        --line: #ded5c8;
+        --gold: #9f7438;
+        --green: #66775d;
+        --soft: #eee7dc;
+        --code: #f3efe7;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+        line-height: 1.8;
+      }
+
+      a {
+        color: var(--gold);
+        text-underline-offset: 4px;
+      }
+
+      .page {
+        width: min(1120px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 48px 0 72px;
+      }
+
+      header {
+        display: grid;
+        gap: 20px;
+        padding: 52px clamp(24px, 6vw, 72px);
+        border: 1px solid var(--line);
+        background: var(--paper);
+      }
+
+      .eyebrow {
+        margin: 0;
+        color: var(--gold);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        line-height: 1.35;
+      }
+
+      h1 {
+        max-width: 820px;
+        font-size: clamp(34px, 6vw, 64px);
+        font-weight: 650;
+      }
+
+      h2 {
+        font-size: clamp(24px, 3vw, 34px);
+      }
+
+      h3 {
+        font-size: 20px;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      .lead {
+        max-width: 820px;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .meta-grid,
+      .card-grid,
+      .file-grid {
+        display: grid;
+        gap: 16px;
+      }
+
+      .meta-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 12px;
+      }
+
+      .card-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .file-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .meta,
+      .card,
+      .callout,
+      .flow {
+        border: 1px solid var(--line);
+        background: var(--paper);
+      }
+
+      .meta {
+        padding: 18px;
+      }
+
+      .meta b,
+      .card b {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--green);
+      }
+
+      section {
+        margin-top: 34px;
+        padding: clamp(24px, 4vw, 40px);
+        border: 1px solid var(--line);
+        background: rgba(255, 253, 248, 0.74);
+      }
+
+      section > .section-head {
+        display: grid;
+        gap: 8px;
+        margin-bottom: 22px;
+      }
+
+      .card {
+        padding: 22px;
+      }
+
+      .card p,
+      .card li {
+        color: var(--muted);
+      }
+
+      ul,
+      ol {
+        margin: 12px 0 0;
+        padding-left: 1.35em;
+      }
+
+      li + li {
+        margin-top: 8px;
+      }
+
+      code {
+        padding: 2px 6px;
+        border: 1px solid #e4dccf;
+        background: var(--code);
+        color: #4b3421;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.92em;
+      }
+
+      .path-list {
+        display: grid;
+        gap: 12px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .path-list li {
+        margin: 0;
+        padding: 16px 18px;
+        border-left: 4px solid var(--gold);
+        background: var(--paper);
+      }
+
+      .path-list span {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+      }
+
+      .flow {
+        display: grid;
+        grid-template-columns: 80px minmax(0, 1fr);
+        gap: 18px;
+        align-items: start;
+        padding: 18px;
+      }
+
+      .flow strong {
+        color: var(--gold);
+        font-size: 26px;
+        line-height: 1;
+      }
+
+      .flow p {
+        color: var(--muted);
+      }
+
+      .callout {
+        margin-top: 18px;
+        padding: 20px;
+        border-color: rgba(159, 116, 56, 0.42);
+        background: #fff9ef;
+      }
+
+      .tag-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 14px;
+      }
+
+      .tag {
+        padding: 5px 9px;
+        border: 1px solid var(--line);
+        background: var(--soft);
+        color: #53483d;
+        font-size: 13px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow-wrap: anywhere;
+      }
+
+      th,
+      td {
+        padding: 14px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        width: 30%;
+        color: var(--green);
+        font-weight: 700;
+      }
+
+      .footer-note {
+        margin-top: 28px;
+        color: var(--muted);
+        font-size: 14px;
+        text-align: center;
+      }
+
+      @media (max-width: 860px) {
+        .meta-grid,
+        .card-grid,
+        .file-grid {
+          grid-template-columns: 1fr;
+        }
+
+        th,
+        td {
+          display: block;
+          width: 100%;
+        }
+
+        th {
+          padding-bottom: 4px;
+          border-bottom: 0;
+        }
+
+        td {
+          padding-top: 4px;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .page {
+          width: min(100% - 24px, 1120px);
+          padding-top: 24px;
+        }
+
+        header,
+        section {
+          padding: 22px;
+        }
+
+        .flow {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header>
+        <p class="eyebrow">Project guide</p>
+        <h1>靜初苑網站專案說明</h1>
+        <p class="lead">
+          這份文件是給第一次接觸程式的人看的版本。它不會逐行解釋程式碼，而是說明這個網站是什麼、每個資料夾在做什麼、聯絡表單怎麼把資料寄出去，以及日後維護時要知道哪些關鍵字。
+        </p>
+        <div class="meta-grid">
+          <div class="meta">
+            <b>網站類型</b>
+            Astro 靜態網站
+          </div>
+          <div class="meta">
+            <b>部署平台</b>
+            Cloudflare Pages
+          </div>
+          <div class="meta">
+            <b>表單寄信</b>
+            Cloudflare Function + Resend
+          </div>
+          <div class="meta">
+            <b>正式網域</b>
+            jingchuyuan.com
+          </div>
+        </div>
+      </header>
+
+      <section>
+        <div class="section-head">
+          <p class="eyebrow">01 / Big picture</p>
+          <h2>這個專案在做什麼</h2>
+        </div>
+        <p>
+          這是一個「靜初苑」服務介紹網站。訪客可以閱讀首頁、服務方案、關於我、常見問題，也可以到聯絡頁加入 LINE、前往 Instagram，或填寫聯絡表單。
+        </p>
+        <div class="card-grid" style="margin-top: 18px">
+          <article class="card">
+            <b>前台頁面</b>
+            <p>訪客看到的內容，例如首頁、服務介紹、FAQ、聯絡頁。這些頁面主要放在 <code>src/pages</code>。</p>
+          </article>
+          <article class="card">
+            <b>共用版型</b>
+            <p>網站每一頁都共用上方導覽、SEO 設定、頁尾。這些集中在 <code>src/layouts/BaseLayout.astro</code>。</p>
+          </article>
+          <article class="card">
+            <b>聯絡表單後端</b>
+            <p>表單不是存在資料庫，而是送到 <code>/api/contact</code>，再由 Resend 寄到指定信箱。</p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <p class="eyebrow">02 / Accounts</p>
+          <h2>帳號與管理權限</h2>
+        </div>
+        <table>
+          <tbody>
+            <tr>
+              <th>GitHub</th>
+              <td>用 <code>anneliu078809</code> 這個帳號管理。GitHub 放的是專案原始碼。</td>
+            </tr>
+            <tr>
+              <th>Cloudflare</th>
+              <td>用 <code>anneliu078809</code> 這個帳號管理。Cloudflare Pages 負責把網站部署上線，也負責 Pages Function 和 Turnstile。</td>
+            </tr>
+            <tr>
+              <th>Resend</th>
+              <td>用 <code>anneliu078809</code> 這個帳號管理。Resend 負責把聯絡表單內容寄成 Email。</td>
+            </tr>
+            <tr>
+              <th>Google Search Console</th>
+              <td>用 <code>anneliu078809</code> 這個帳號管理。Google Search Console 負責看 Google 收錄狀態、提交 sitemap、檢查搜尋曝光。</td>
+            </tr>
+            <tr>
+              <th>收表單信箱</th>
+              <td>只有收聯絡表單的信箱不同，是 <code>jingchuyuan1413@gmail.com</code>。</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="callout">
+          <b>提醒：</b>API Key、Secret Key、Cloudflare 後台密碼、Resend 金鑰都不能放進 GitHub。這些資料應該只放在 Cloudflare 的環境變數或後台設定裡。
+        </div>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <p class="eyebrow">03 / Structure</p>
+          <h2>資料夾和檔案怎麼看</h2>
+        </div>
+        <div class="file-grid">
+          <ul class="path-list">
+            <li>
+              <code>src/pages/index.astro</code>
+              <span>首頁。介紹靜初苑、適合對象、預約流程。</span>
+            </li>
+            <li>
+              <code>src/pages/service.astro</code>
+              <span>服務方案頁。列出問事服務、牌卡占卜、手工藥香、調頻蠟燭、家族排列、身體經絡放鬆引導。</span>
+            </li>
+            <li>
+              <code>src/pages/about.astro</code>
+              <span>關於我頁。放靜初苑的緣起與理念。</span>
+            </li>
+            <li>
+              <code>src/pages/faq.astro</code>
+              <span>常見問題頁。回答第一次詢問、服務方式、費用、預約等問題。</span>
+            </li>
+          </ul>
+          <ul class="path-list">
+            <li>
+              <code>src/pages/contact.astro</code>
+              <span>聯絡頁。包含 LINE、Instagram、Email 與聯絡表單。</span>
+            </li>
+            <li>
+              <code>src/layouts/BaseLayout.astro</code>
+              <span>所有頁面共用的外框：導覽列、頁尾、SEO、社群分享資訊、結構化資料。</span>
+            </li>
+            <li>
+              <code>src/components/PictureSlot.astro</code>
+              <span>圖片顯示元件。各頁面的主視覺或情境圖會用到它。</span>
+            </li>
+            <li>
+              <code>functions/api/contact.js</code>
+              <span>聯絡表單後端。檢查資料、驗證防機器人、限制頻率，然後呼叫 Resend 寄信。</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <p class="eyebrow">04 / Page map</p>
+          <h2>網站頁面地圖</h2>
+        </div>
+        <div class="card-grid">
+          <article class="card">
+            <h3>首頁 <code>/</code></h3>
+            <p>讓訪客快速理解靜初苑是陪伴整理狀態、釐清困擾、找回方向的地方。</p>
+          </article>
+          <article class="card">
+            <h3>服務方案 <code>/service/</code></h3>
+            <p>列出服務項目、費用或詢問方式，並引導訪客去聯絡預約。</p>
+          </article>
+          <article class="card">
+            <h3>關於我 <code>/about/</code></h3>
+            <p>說明靜初苑名字和理念，建立信任感。</p>
+          </article>
+          <article class="card">
+            <h3>常見問題 <code>/faq/</code></h3>
+            <p>降低訪客第一次詢問前的不安，先回答基本問題。</p>
+          </article>
+          <article class="card">
+            <h3>聯絡 <code>/contact/</code></h3>
+            <p>提供 LINE、Instagram、Email，並讓訪客填表單。</p>
+          </article>
+          <article class="card">
+            <h3>表單 API <code>/api/contact</code></h3>
+            <p>這不是一般頁面，是表單送出後呼叫的後端入口。</p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <p class="eyebrow">05 / Contact form</p>
+          <h2>聯絡表單怎麼運作</h2>
+        </div>
+        <div class="flow">
+          <strong>1</strong>
+          <div>
+            <h3>訪客填表單</h3>
+            <p>表單欄位包含姓名或暱稱、想詢問的服務、偏好的聯絡方式、聯絡資料、想聊的方向。</p>
+          </div>
+        </div>
+        <div class="flow">
+          <strong>2</strong>
+          <div>
+            <h3>前端先做基本檢查</h3>
+            <p>例如必填欄位不能空白、文字不能超過限制。如果有設定 Turnstile，頁面會載入 Cloudflare 的防機器人元件。</p>
+          </div>
+        </div>
+        <div class="flow">
+          <strong>3</strong>
+          <div>
+            <h3>送到 Cloudflare Pages Function</h3>
+            <p>表單資料送到 <code>/api/contact</code>，由 <code>functions/api/contact.js</code> 處理。</p>
+          </div>
+        </div>
+        <div class="flow">
+          <strong>4</strong>
+          <div>
+            <h3>後端做安全檢查</h3>
+            <p>後端會檢查來源網址、欄位長度、必填資料、蜜罐欄位、Turnstile token，並做簡單頻率限制。</p>
+          </div>
+        </div>
+        <div class="flow">
+          <strong>5</strong>
+          <div>
+            <h3>用 Resend 寄信</h3>
+            <p>檢查通過後，後端呼叫 Resend API，把表單內容寄到 <code>jingchuyuan1413@gmail.com</code>。</p>
+          </div>
+        </div>
+        <div class="callout">
+          這個專案目前沒有資料庫，也沒有後台管理頁。表單資料的保存位置就是 Email 信箱本身。如果需要查詢歷史表單，會去信箱裡搜尋。
+        </div>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <p class="eyebrow">06 / Deployment</p>
+          <h2>上線和部署怎麼理解</h2>
+        </div>
+        <p>
+          這個網站部署在 Cloudflare Pages。平常修改程式後，會把程式推到 GitHub，Cloudflare Pages 會依設定建置網站並發布。
+        </p>
+        <div class="card-grid" style="margin-top: 18px">
+          <article class="card">
+            <b>建置指令</b>
+            <p><code>npm run build</code></p>
+          </article>
+          <article class="card">
+            <b>輸出資料夾</b>
+            <p><code>dist</code></p>
+          </article>
+          <article class="card">
+            <b>本機開發網址</b>
+            <p><code>http://127.0.0.1:4321/</code></p>
+          </article>
+        </div>
+        <div class="callout">
+          Cloudflare Pages 後台需要設定環境變數，例如 <code>NODE_VERSION</code>、<code>RESEND_API_KEY</code>、<code>CONTACT_TO_EMAIL</code>、<code>CONTACT_FROM_EMAIL</code>、<code>PUBLIC_TURNSTILE_SITE_KEY</code>、<code>TURNSTILE_SECRET_KEY</code>、<code>CONTACT_ALLOWED_ORIGINS</code>。
+        </div>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <p class="eyebrow">07 / SEO</p>
+          <h2>Google 搜尋相關設定</h2>
+        </div>
+        <p>
+          專案裡有基本 SEO 設定。每一頁透過共用版型放入標題、描述、canonical URL、Open Graph 圖片、Twitter card 和 JSON-LD 結構化資料。
+        </p>
+        <ul>
+          <li><code>public/robots.txt</code>：告訴搜尋引擎可以爬網站，並指定 sitemap 位置。</li>
+          <li><code>public/sitemap.xml</code>：列出主要頁面，方便 Google Search Console 提交。</li>
+          <li><code>BaseLayout.astro</code>：集中管理大部分 SEO 標籤。</li>
+        </ul>
+        <div class="tag-row">
+          <span class="tag">SEO</span>
+          <span class="tag">Google Search Console</span>
+          <span class="tag">sitemap.xml</span>
+          <span class="tag">robots.txt</span>
+          <span class="tag">canonical URL</span>
+          <span class="tag">JSON-LD</span>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <p class="eyebrow">08 / Maintenance</p>
+          <h2>日後改內容時看哪裡</h2>
+        </div>
+        <table>
+          <tbody>
+            <tr>
+              <th>改服務項目或價格</th>
+              <td>看 <code>src/pages/service.astro</code>，服務資料集中在檔案上方的 <code>services</code> 陣列。</td>
+            </tr>
+            <tr>
+              <th>改 LINE / Instagram / Email</th>
+              <td>看 <code>src/pages/contact.astro</code>。如果 Email 要同步影響表單收件，也要檢查 Cloudflare 的 <code>CONTACT_TO_EMAIL</code>。</td>
+            </tr>
+            <tr>
+              <th>改導覽列或頁尾</th>
+              <td>看 <code>src/layouts/BaseLayout.astro</code> 的 <code>navItems</code> 和 <code>footerItems</code>。</td>
+            </tr>
+            <tr>
+              <th>改圖片</th>
+              <td>看 <code>public/images</code>。頁面裡會用 <code>/images/...</code> 這種路徑引用圖片。</td>
+            </tr>
+            <tr>
+              <th>改表單規則</th>
+              <td>前端看 <code>src/pages/contact.astro</code>，後端看 <code>functions/api/contact.js</code>。兩邊的欄位名稱和長度限制最好保持一致。</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <p class="footer-note">
+        文件位置：<code>doc/project-guide.html</code>。最後整理日期：2026-06-28。
+      </p>
+    </div>
+  </body>
+</html>
